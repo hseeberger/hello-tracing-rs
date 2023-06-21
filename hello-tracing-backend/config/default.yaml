@@ -1,3 +1,7 @@
 api:
   addr: 0.0.0.0
   port: 80
+
+tracing:
+  service-name: hello-tracing-backend
+  otlp-exporter-endpoint: http://localhost:1234

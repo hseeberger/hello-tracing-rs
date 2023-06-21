@@ -4,3 +4,7 @@ api:
 
 backend:
   endpoint: http://127.0.0.1:90
+
+tracing:
+  service-name: hello-tracing-backend
+  otlp-exporter-endpoint: http://localhost:1234
