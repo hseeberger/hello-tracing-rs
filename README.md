@@ -1,6 +1,6 @@
 # hello-tracing-rs
 
-Simple dockerized Rust/Axum/toic based demo.
+Simple dockerized Rust/Axum/toic based tracing demo.
 
 ## Run the backend
 

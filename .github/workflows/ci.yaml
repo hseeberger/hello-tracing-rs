@@ -1,0 +1,42 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - main
+    tags-ignore:
+      - v*
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  fmt-lint-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v3
+
+      # Nightly needed for `cargo +nightly fmt` below
+      - name: Install Rust toolchain
+        run: |
+          rustup update
+          rustup toolchain install nightly --profile minimal
+          rustup component add rustfmt --toolchain nightly
+          # rustup component add clippy --toolchain nightly
+
+      - name: Install protoc
+        uses: arduino/setup-protoc@v2
+
+      - name: Set up Rust cache
+        uses: Swatinem/rust-cache@v2
+
+      - name: Check code format (cargo fmt)
+        run: cargo +nightly fmt --check
+
+      - name: Lint (cargo clippy)
+        run: cargo clippy --no-deps -- -D warnings
+
+      - name: Test (cargo test)
+        run: cargo test
