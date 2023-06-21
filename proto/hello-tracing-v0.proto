@@ -1,0 +1,8 @@
+syntax = "proto3";
+package hello_tracing_v0;
+
+service Hello { rpc Hello(HelloRequest) returns (HelloResponse); }
+
+message HelloRequest {}
+
+message HelloResponse { string msg = 1; }
