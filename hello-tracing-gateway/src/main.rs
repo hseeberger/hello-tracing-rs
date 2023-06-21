@@ -12,7 +12,7 @@ use opentelemetry::{
 };
 use opentelemetry_otlp::WithExportConfig;
 use serde::Deserialize;
-use tracing::{error, info, warn, Subscriber};
+use tracing::{error, info, Subscriber};
 use tracing_subscriber::{
     fmt, layer::SubscriberExt, registry::LookupSpan, util::SubscriberInitExt, EnvFilter, Layer,
 };
