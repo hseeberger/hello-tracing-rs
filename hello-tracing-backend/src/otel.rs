@@ -1,13 +1,13 @@
 use axum::{
     body::Body,
-    http::{HeaderMap, HeaderName},
+    http::{self, HeaderMap, HeaderName},
 };
 use opentelemetry::{global, propagation::Extractor, trace::TraceContextExt};
-use tonic::codegen::http::Request;
 use tracing::{error, Span};
 use tracing_opentelemetry::OpenTelemetrySpanExt;
 
-pub fn set_span_parent(request: Request<Body>) -> Request<Body> {
+/// Associate the current span with the OTel trace of the given request.
+pub fn associate_span_with_trace(request: http::Request<Body>) -> http::Request<Body> {
     let span = Span::current();
 
     let parent_context = global::get_text_map_propagator(|propagator| {
@@ -18,7 +18,8 @@ pub fn set_span_parent(request: Request<Body>) -> Request<Body> {
     request
 }
 
-pub fn record_trace_id(request: Request<Body>) -> Request<Body> {
+/// Recorcd the OTel trace ID of the given request as "trace_id" field in the current span.
+pub fn record_trace_id(request: http::Request<Body>) -> http::Request<Body> {
     let span = Span::current();
 
     let trace_id = span.context().span().span_context().trace_id();

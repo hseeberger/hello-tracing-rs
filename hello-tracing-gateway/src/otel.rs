@@ -1,12 +1,23 @@
-use opentelemetry::propagation::Injector;
-use tonic::{
-    metadata::{MetadataKey, MetadataMap, MetadataValue},
-    Request, Status,
-};
+use axum::{body::Body, http};
+use opentelemetry::{propagation::Injector, trace::TraceContextExt};
+use tonic::metadata::{MetadataKey, MetadataMap, MetadataValue};
 use tracing::{error, Span};
 use tracing_opentelemetry::OpenTelemetrySpanExt;
 
-pub fn inject_trace_context<T>(mut request: Request<T>) -> Result<Request<T>, Status> {
+/// Recorcd the OTel trace ID of the given request as "trace_id" field in the current span.
+pub fn record_trace_id(request: http::Request<Body>) -> http::Request<Body> {
+    let span = Span::current();
+
+    let trace_id = span.context().span().span_context().trace_id();
+    span.record("trace_id", trace_id.to_string());
+
+    request
+}
+
+/// Propagate the OTel trace by injecting the trace context into the metadata of the given request.
+pub fn propagate_trace<T>(
+    mut request: tonic::Request<T>,
+) -> Result<tonic::Request<T>, tonic::Status> {
     opentelemetry::global::get_text_map_propagator(|propagator| {
         let context = Span::current().context();
         propagator.inject_context(&context, &mut MetadataInjector(request.metadata_mut()))
@@ -34,7 +45,7 @@ impl Injector for MetadataInjector<'_> {
             Err(error) => error!(
                 key,
                 error = format!("{error:#}"),
-                "cannot parse key as metadata value"
+                "parse key as metadata value"
             ),
         }
     }

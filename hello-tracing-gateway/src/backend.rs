@@ -4,7 +4,7 @@ mod proto {
 
 use crate::{
     backend::proto::{hello_client::HelloClient, HelloRequest},
-    otel::inject_trace_context,
+    otel::propagate_trace,
 };
 use anyhow::{Context, Result};
 use serde::Deserialize;
@@ -22,7 +22,7 @@ impl Backend {
         Self { config }
     }
 
-    #[instrument]
+    #[instrument(skip(self))]
     pub async fn hello(&self) -> Result<String> {
         let endpoint = Endpoint::from_str(&self.config.endpoint)
             .with_context(|| format!("create endpoint {}", self.config.endpoint))?;
@@ -30,7 +30,7 @@ impl Backend {
             .connect()
             .await
             .with_context(|| format!("connect to endpoint {}", self.config.endpoint))?;
-        let mut client = HelloClient::with_interceptor(channel, inject_trace_context);
+        let mut client = HelloClient::with_interceptor(channel, propagate_trace);
 
         let msg = client
             .hello(HelloRequest {})
