@@ -8,3 +8,15 @@ check:
 
 test:
 	cargo test
+
+docker:
+	docker build \
+		--build-arg RUST_VERSION=1.70.0 \
+		-t hseeberger/hello-tracing-backend \
+		-f hello-tracing-backend/Dockerfile \
+		.
+	docker build \
+		--build-arg RUST_VERSION=1.70.0 \
+		-t hseeberger/hello-tracing-gateway \
+		-f hello-tracing-gateway/Dockerfile \
+		.
