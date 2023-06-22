@@ -2,10 +2,15 @@ mod proto {
     tonic::include_proto!("hello_tracing_v0");
 }
 
-use crate::backend::proto::{hello_client::HelloClient, HelloRequest};
+use crate::{
+    backend::proto::{hello_client::HelloClient, HelloRequest},
+    otel::propagate_trace,
+};
 use anyhow::{Context, Result};
 use serde::Deserialize;
-use tracing::debug;
+use std::str::FromStr;
+use tonic::transport::Endpoint;
+use tracing::{debug, instrument};
 
 #[derive(Debug, Clone)]
 pub struct Backend {
@@ -17,10 +22,15 @@ impl Backend {
         Self { config }
     }
 
+    #[instrument(skip(self))]
     pub async fn hello(&self) -> Result<String> {
-        let mut client = HelloClient::connect(self.config.endpoint.to_owned())
+        let endpoint = Endpoint::from_str(&self.config.endpoint)
+            .with_context(|| format!("create endpoint {}", self.config.endpoint))?;
+        let channel = endpoint
+            .connect()
             .await
             .with_context(|| format!("connect to endpoint {}", self.config.endpoint))?;
+        let mut client = HelloClient::with_interceptor(channel, propagate_trace);
 
         let msg = client
             .hello(HelloRequest {})

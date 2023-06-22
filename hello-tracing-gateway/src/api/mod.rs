@@ -1,13 +1,20 @@
 mod v0;
 
-use crate::backend::Backend;
+use crate::{backend::Backend, otel::record_trace_id};
 use anyhow::{Context, Result};
-use axum::{http::StatusCode, response::IntoResponse, routing::get, Router, Server};
+use axum::{
+    body::Body,
+    http::{Request, StatusCode},
+    response::IntoResponse,
+    routing::get,
+    Router, Server,
+};
 use serde::Deserialize;
 use std::net::{IpAddr, SocketAddr};
 use tokio::signal::unix::{signal, SignalKind};
 use tower::ServiceBuilder;
-use tower_http::trace::{DefaultMakeSpan, TraceLayer};
+use tower_http::trace::TraceLayer;
+use tracing::{field, info_span, Span};
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -28,7 +35,8 @@ pub async fn serve(config: Config, backend: Backend) -> Result<()> {
         .nest("/v0", v0::app(backend))
         .layer(
             ServiceBuilder::new()
-                .layer(TraceLayer::new_for_http().make_span_with(DefaultMakeSpan::new())),
+                .layer(TraceLayer::new_for_http().make_span_with(make_span))
+                .map_request(record_trace_id),
         );
 
     Server::bind(&config.socket_addr())
@@ -40,6 +48,11 @@ pub async fn serve(config: Config, backend: Backend) -> Result<()> {
 
 async fn ready() -> impl IntoResponse {
     StatusCode::OK
+}
+
+fn make_span(request: &Request<Body>) -> Span {
+    let headers = request.headers();
+    info_span!("incoming request", ?headers, trace_id = field::Empty)
 }
 
 async fn shutdown_signal() {

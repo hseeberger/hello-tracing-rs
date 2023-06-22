@@ -1,7 +1,7 @@
 use crate::backend::Backend;
 use anyhow::Error;
 use axum::{extract::State, http::StatusCode, response::IntoResponse, routing::get, Router};
-use tracing::error;
+use tracing::{error, instrument};
 
 pub fn app(backend: Backend) -> Router {
     let app_state = AppState { backend };
@@ -15,6 +15,7 @@ struct AppState {
     backend: Backend,
 }
 
+#[instrument(skip(app_state))]
 async fn hello(State(app_state): State<AppState>) -> impl IntoResponse {
     app_state.backend.hello().await.map_err(internal_error)
 }
