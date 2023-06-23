@@ -16,7 +16,7 @@ jobs:
         id: version
         run: |
           ref_name=${{ github.ref_name }}
-          version=${ref_name#gateway-}
+          version=${ref_name#hello-tracing-gateway-}
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
       - name: Docker metadata
