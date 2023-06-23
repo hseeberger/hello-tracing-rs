@@ -1,9 +1,9 @@
-name: release
+name: release-hello-tracing-gateway
 
 on:
   push:
     tags:
-      - v*
+      - gateway-v*
 
 jobs:
   docker:
@@ -12,12 +12,19 @@ jobs:
       - name: Check out
         uses: actions/checkout@v3
 
+      - name: Determine version
+        id: version
+        run: |
+          ref_name=${{ github.ref_name }}
+          version=${ref_name#gateway-}
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
       - name: Docker metadata
         uses: docker/metadata-action@v4
         id: meta
         with:
-          images: hseeberger/hello-rs
-          tags: type=semver,pattern={{version}}
+          images: hseeberger/hello-tracing-gateway
+          tags: type=semver,pattern={{version}},value=${{ steps.version.outputs.version }}
 
       - name: Login to DockerHub
         uses: docker/login-action@v2
