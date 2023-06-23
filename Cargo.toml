@@ -13,6 +13,7 @@ readme        = "README.md"
 homepage      = "https://github.com/hseeberger/hello-tracing-rs"
 repository    = "https://github.com/hseeberger/hello-tracing-rs"
 documentation = "https://github.com/hseeberger/hello-tracing-rs"
+publish       = false
 
 [workspace.dependencies]
 anyhow                = { version = "1.0", features = [ "backtrace" ] }
