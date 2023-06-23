@@ -3,7 +3,7 @@ name: release-hello-tracing-gateway
 on:
   push:
     tags:
-      - gateway-v*
+      - hello-tracing-gateway-v*
 
 jobs:
   docker:
