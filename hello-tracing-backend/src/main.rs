@@ -72,19 +72,19 @@ fn otel_layer<S>(config: TracingConfig) -> Result<impl Layer<S>>
 where
     S: Subscriber + for<'span> LookupSpan<'span>,
 {
+    let exporter = opentelemetry_otlp::new_exporter()
+        .tonic()
+        .with_endpoint(config.otlp_exporter_endpoint);
+
     let trace_config = trace::config().with_resource(Resource::new(vec![KeyValue::new(
         "service.name",
         config.service_name,
     )]));
 
-    let exporter = opentelemetry_otlp::new_exporter()
-        .tonic()
-        .with_endpoint(config.otlp_exporter_endpoint);
-
     let tracer = opentelemetry_otlp::new_pipeline()
         .tracing()
-        .with_trace_config(trace_config)
         .with_exporter(exporter)
+        .with_trace_config(trace_config)
         .install_batch(runtime::Tokio)
         .context("install tracer")?;
 

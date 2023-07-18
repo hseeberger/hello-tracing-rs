@@ -4,4 +4,4 @@ api:
 
 tracing:
   service-name: hello-tracing-backend
-  otlp-exporter-endpoint: http://localhost:1234
+  otlp-exporter-endpoint: http://localhost:4317

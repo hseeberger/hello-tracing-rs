@@ -11,7 +11,7 @@ RUST_LOG=hello_tracing_backend=debug,info \
   CONFIG_DIR=hello-tracing-backend/config \
   APP__API__PORT=8090 \
   cargo run -p hello-tracing-backend \
-  | jq
+  > /Users/heiko/tmp/hello-tracing-rs/hello-tracing-backend.log
 ```
 
 ## Run the gateway
@@ -24,7 +24,7 @@ RUST_LOG=hello_tracing_gateway=debug,info \
   APP__API__PORT=8080 \
   APP__BACKEND__ENDPOINT=http://localhost:8090 \
   cargo run -p hello-tracing-gateway \
-  | jq
+  > /Users/heiko/tmp/hello-tracing-rs/hello-tracing-gateway.log
 ```
 
 ## License ##
