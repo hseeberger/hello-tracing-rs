@@ -1,6 +1,6 @@
 mod v0;
 
-use crate::otel::{associate_span_with_trace, record_trace_id};
+use crate::otel::{accept_trace, record_trace_id};
 use anyhow::{Context, Result};
 use axum::{body::Body, http::Request};
 use serde::Deserialize;
@@ -31,7 +31,7 @@ pub async fn serve(config: Config) -> Result<()> {
         .layer(
             ServiceBuilder::new()
                 .layer(TraceLayer::new_for_grpc().make_span_with(make_span))
-                .map_request(associate_span_with_trace)
+                .map_request(accept_trace)
                 .map_request(record_trace_id),
         )
         .add_service(v0::hello());
