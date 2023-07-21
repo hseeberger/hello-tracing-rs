@@ -41,7 +41,8 @@ impl Backend {
 
         debug!(
             msg,
-            self.config.endpoint, "received response from rpc Hello"
+            endpoint = self.config.endpoint,
+            "received response from rpc Hello"
         );
 
         Ok(msg)
