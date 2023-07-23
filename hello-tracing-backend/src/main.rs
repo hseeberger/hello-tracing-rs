@@ -6,11 +6,13 @@ use configured::Configured;
 use opentelemetry::{
     global, runtime,
     sdk::{propagation::TraceContextPropagator, trace, Resource},
+    trace::TraceContextExt,
     KeyValue,
 };
 use opentelemetry_otlp::WithExportConfig;
 use serde::Deserialize;
 use tracing::{error, info, Subscriber};
+use tracing_opentelemetry::OtelData;
 use tracing_subscriber::{
     fmt, layer::SubscriberExt, registry::LookupSpan, util::SubscriberInitExt, EnvFilter, Layer,
 };
@@ -61,7 +63,16 @@ fn init_tracing(config: TracingConfig) -> Result<()> {
 
     tracing_subscriber::registry()
         .with(EnvFilter::from_default_env())
-        .with(fmt::layer().json())
+        .with(
+            fmt::layer()
+                .json()
+                .with_span_list(false)
+                .with_make_trace_id(Box::new(|extensions| {
+                    extensions
+                        .get::<OtelData>()
+                        .map(|otel_data| otel_data.parent_cx.span().span_context().trace_id())
+                })),
+        )
         .with(otel_layer(config)?)
         .try_init()
         .context("initialize tracing subscriber")
