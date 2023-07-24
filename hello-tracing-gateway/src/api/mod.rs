@@ -1,6 +1,9 @@
 mod v0;
 
-use crate::{backend::Backend, otel::record_trace_id};
+use crate::{
+    backend::Backend,
+    otel::{accept_trace, record_trace_id},
+};
 use anyhow::{Context, Result};
 use axum::{
     body::Body,
@@ -36,6 +39,7 @@ pub async fn serve(config: Config, backend: Backend) -> Result<()> {
         .layer(
             ServiceBuilder::new()
                 .layer(TraceLayer::new_for_http().make_span_with(make_span))
+                .map_request(accept_trace)
                 .map_request(record_trace_id),
         );
 

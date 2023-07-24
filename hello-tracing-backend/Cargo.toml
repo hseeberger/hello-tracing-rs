@@ -19,7 +19,6 @@ opentelemetry         = { workspace = true }
 opentelemetry-http    = { workspace = true }
 opentelemetry-otlp    = { workspace = true }
 prost                 = { workspace = true }
-reqwest               = { workspace = true }
 serde                 = { workspace = true }
 serde_json            = { workspace = true }
 tokio                 = { workspace = true }
