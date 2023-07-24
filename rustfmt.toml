@@ -1,6 +1,8 @@
 edition = "2021"
 
-unstable_features = true
-comment_width = 100
+reorder_imports = true
+
+unstable_features   = true
+comment_width       = 100
 imports_granularity = "Crate"
-wrap_comments = true
+wrap_comments       = true
