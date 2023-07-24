@@ -15,7 +15,7 @@ struct AppState {
     backend: Backend,
 }
 
-#[instrument(skip(app_state))]
+#[instrument(name = "hello-handler", skip(app_state))]
 async fn hello(State(app_state): State<AppState>) -> impl IntoResponse {
     app_state.backend.hello().await.map_err(internal_error)
 }

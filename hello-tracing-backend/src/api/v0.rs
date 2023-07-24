@@ -24,7 +24,7 @@ pub struct HelloService(Arc<RwLock<usize>>);
 
 #[tonic::async_trait]
 impl Hello for HelloService {
-    #[instrument(skip(self, _request))]
+    #[instrument(name = "hello-handler", skip(self, _request))]
     async fn hello(
         &self,
         _request: Request<HelloRequest>,

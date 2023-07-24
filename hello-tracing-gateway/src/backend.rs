@@ -22,7 +22,7 @@ impl Backend {
         Self { config }
     }
 
-    #[instrument(skip(self))]
+    #[instrument(name = "hello-backend-client", skip(self))]
     pub async fn hello(&self) -> Result<String> {
         let endpoint = Endpoint::from_str(&self.config.endpoint)
             .with_context(|| format!("create endpoint {}", self.config.endpoint))?;
