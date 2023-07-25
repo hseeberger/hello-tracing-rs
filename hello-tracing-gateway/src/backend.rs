@@ -1,12 +1,10 @@
 mod proto {
-    tonic::include_proto!("hello_tracing_v0");
+    tonic::include_proto!("hello_tracing_backend_v0");
 }
 
-use crate::{
-    backend::proto::{hello_client::HelloClient, HelloRequest},
-    otel::propagate_trace,
-};
+use self::proto::{hello_client::HelloClient, HelloRequest};
 use anyhow::{Context, Result};
+use hello_tracing_common::otel::grpc::propagate_trace;
 use serde::Deserialize;
 use std::str::FromStr;
 use tonic::transport::Endpoint;

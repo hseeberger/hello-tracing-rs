@@ -1,3 +1,7 @@
+mod proto {
+    tonic::include_proto!("hello_tracing_backend_v0");
+}
+
 use self::proto::{
     hello_server::{Hello, HelloServer},
     HelloRequest, HelloResponse,
@@ -6,10 +10,6 @@ use std::sync::Arc;
 use tokio::sync::RwLock;
 use tonic::{Request, Response, Status};
 use tracing::{debug, instrument};
-
-mod proto {
-    tonic::include_proto!("hello_tracing_v0");
-}
 
 const MSGS: [&str; 2] = [
     "Hello, I'm a tracing demo!",

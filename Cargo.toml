@@ -1,6 +1,7 @@
 [workspace]
 members = [
   "hello-tracing-backend",
+  "hello-tracing-common",
   "hello-tracing-gateway",
 ]
 
@@ -33,7 +34,7 @@ tower                 = { version = "0.4" }
 tower-http            = { version = "0.4", features = [ "trace" ] }
 tracing               = { version = "0.1", default-features = false }
 tracing-opentelemetry = { version = "0.19", default-features = false }
-tracing-subscriber    = { version = "0.3", default-features = false, features = [ "env-filter", "fmt", "json", "otel" ] }
+tracing-subscriber    = { version = "0.3", default-features = false, features = [ "env-filter", "fmt", "json", "extra-fields" ] }
 walkdir               = { version = "2.3" }
 
 [patch.crates-io]
