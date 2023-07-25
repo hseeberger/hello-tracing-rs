@@ -10,6 +10,7 @@ use opentelemetry::{
 };
 use opentelemetry_otlp::WithExportConfig;
 use serde::Deserialize;
+use std::{collections::HashMap, iter};
 use tracing::{error, info, Subscriber};
 use tracing_opentelemetry::OtelData;
 use tracing_subscriber::{
@@ -69,7 +70,14 @@ fn init_tracing(config: TracingConfig) -> Result<()> {
                 .with_make_trace_id(Box::new(|extensions| {
                     extensions
                         .get::<OtelData>()
-                        .map(|otel_data| otel_data.parent_cx.span().span_context().trace_id())
+                        .map(|otel_data| {
+                            let trace_id = otel_data.parent_cx.span().span_context().trace_id();
+                            HashMap::from_iter(iter::once((
+                                "trace_id".to_string(),
+                                trace_id.to_string(),
+                            )))
+                        })
+                        .unwrap_or_default()
                 })),
         )
         .with(otel_layer(config)?)
