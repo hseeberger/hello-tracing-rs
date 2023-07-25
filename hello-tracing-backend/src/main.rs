@@ -67,7 +67,7 @@ fn init_tracing(config: TracingConfig) -> Result<()> {
             fmt::layer()
                 .json()
                 .with_span_list(false)
-                .with_make_trace_id(Box::new(|extensions| {
+                .with_extra_fields(Box::new(|extensions| {
                     extensions
                         .get::<OtelData>()
                         .map(|otel_data| {
