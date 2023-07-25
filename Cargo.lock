@@ -528,6 +528,7 @@ dependencies = [
  "anyhow",
  "axum",
  "configured",
+ "hello-tracing-common",
  "opentelemetry",
  "opentelemetry-http",
  "opentelemetry-otlp",
@@ -546,12 +547,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "hello-tracing-common"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "opentelemetry",
+ "opentelemetry-http",
+ "tonic 0.9.2",
+ "tracing",
+ "tracing-opentelemetry",
+]
+
+[[package]]
 name = "hello-tracing-gateway"
 version = "0.3.0"
 dependencies = [
  "anyhow",
  "axum",
  "configured",
+ "hello-tracing-common",
  "opentelemetry",
  "opentelemetry-http",
  "opentelemetry-otlp",

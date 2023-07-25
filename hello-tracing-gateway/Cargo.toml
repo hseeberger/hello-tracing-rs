@@ -12,6 +12,7 @@ documentation = { workspace = true }
 publish       = { workspace = true }
 
 [dependencies]
+hello-tracing-common  = { path = "../hello-tracing-common" }
 anyhow                = { workspace = true }
 axum                  = { workspace = true }
 configured            = { workspace = true }

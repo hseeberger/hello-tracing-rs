@@ -1,0 +1,20 @@
+[package]
+name          = "hello-tracing-common"
+version       = "0.1.0"
+description   = "hello-tracing-backend"
+edition       = { workspace = true }
+authors       = { workspace = true }
+license       = { workspace = true }
+readme        = { workspace = true }
+homepage      = { workspace = true }
+repository    = { workspace = true }
+documentation = { workspace = true }
+publish       = { workspace = true }
+
+[dependencies]
+axum                  = { workspace = true }
+opentelemetry         = { workspace = true }
+opentelemetry-http    = { workspace = true }
+tonic                 = { workspace = true }
+tracing               = { workspace = true }
+tracing-opentelemetry = { workspace = true }

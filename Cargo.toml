@@ -1,6 +1,7 @@
 [workspace]
 members = [
   "hello-tracing-backend",
+  "hello-tracing-common",
   "hello-tracing-gateway",
 ]
 

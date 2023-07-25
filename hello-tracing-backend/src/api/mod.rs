@@ -1,8 +1,8 @@
 mod v0;
 
-use crate::otel::{accept_trace, record_trace_id};
 use anyhow::{Context, Result};
 use axum::{body::Body, http::Request};
+use hello_tracing_common::otel::http::{accept_trace, record_trace_id};
 use serde::Deserialize;
 use std::net::{IpAddr, SocketAddr};
 use tokio::signal::unix::{signal, SignalKind};

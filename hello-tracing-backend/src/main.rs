@@ -1,5 +1,4 @@
 mod api;
-mod otel;
 
 use anyhow::{Context, Result};
 use configured::Configured;

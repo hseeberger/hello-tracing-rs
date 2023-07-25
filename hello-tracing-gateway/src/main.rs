@@ -1,6 +1,5 @@
 mod api;
 mod backend;
-mod otel;
 
 use crate::backend::Backend;
 use anyhow::{Context, Result};

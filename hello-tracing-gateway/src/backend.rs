@@ -3,8 +3,8 @@ mod proto {
 }
 
 use self::proto::{hello_client::HelloClient, HelloRequest};
-use crate::otel::propagate_trace;
 use anyhow::{Context, Result};
+use hello_tracing_common::otel::grpc::propagate_trace;
 use serde::Deserialize;
 use std::str::FromStr;
 use tonic::transport::Endpoint;

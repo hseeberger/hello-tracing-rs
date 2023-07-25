@@ -1,9 +1,6 @@
 mod v0;
 
-use crate::{
-    backend::Backend,
-    otel::{accept_trace, record_trace_id},
-};
+use crate::backend::Backend;
 use anyhow::{Context, Result};
 use axum::{
     body::Body,
@@ -12,6 +9,7 @@ use axum::{
     routing::get,
     Router, Server,
 };
+use hello_tracing_common::otel::http::{accept_trace, record_trace_id};
 use serde::Deserialize;
 use std::net::{IpAddr, SocketAddr};
 use tokio::signal::unix::{signal, SignalKind};
