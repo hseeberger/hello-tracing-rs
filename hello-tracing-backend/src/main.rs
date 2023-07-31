@@ -15,14 +15,14 @@ async fn main() -> Result<()> {
 
     let result = api::serve(config.api).await;
 
-    if let Err(error) = &result {
+    if let Err(error) = result {
         error!(
             error = format!("{error:#}"),
             backtrace = %error.backtrace(),
             "hello-tracing-backend exited with ERROR"
         );
     };
-    result
+    Ok(())
 }
 
 #[derive(Debug, Deserialize)]
