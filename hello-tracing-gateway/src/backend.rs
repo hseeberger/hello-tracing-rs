@@ -4,7 +4,7 @@ mod proto {
 
 use self::proto::{hello_client::HelloClient, HelloRequest};
 use anyhow::{Context, Result};
-use hello_tracing_common::otel::grpc::propagate_trace;
+use hello_tracing_common::otel::grpc::send_trace;
 use serde::Deserialize;
 use std::str::FromStr;
 use tonic::transport::Endpoint;
@@ -28,7 +28,7 @@ impl Backend {
             .connect()
             .await
             .with_context(|| format!("connect to endpoint {}", self.config.endpoint))?;
-        let mut client = HelloClient::with_interceptor(channel, propagate_trace);
+        let mut client = HelloClient::with_interceptor(channel, send_trace);
 
         let msg = client
             .hello(HelloRequest {})
