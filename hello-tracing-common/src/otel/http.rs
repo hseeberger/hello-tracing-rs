@@ -7,13 +7,11 @@ use tracing_opentelemetry::OpenTelemetrySpanExt;
 /// Trace context propagation: associate the current span with the OTel trace of the given request,
 /// if any and valid.
 pub fn accept_trace(request: Request<Body>) -> Request<Body> {
-    let span = Span::current();
-
     // Current context, if no or invalid data is received.
     let parent_context = global::get_text_map_propagator(|propagator| {
         propagator.extract(&HeaderExtractor(request.headers()))
     });
-    span.set_parent(parent_context);
+    Span::current().set_parent(parent_context);
 
     request
 }
