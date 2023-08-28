@@ -21,6 +21,9 @@ pub struct TracingConfig {
     otlp_exporter_endpoint: String,
 }
 
+/// Initialize tracing: apply an `EnvFilter` using the `RUST_LOG` environment variable to define the
+/// log levels, add a formatter layer logging trace events as JSON and on OpenTelemetry layer
+/// exporting trace data.
 pub fn init_tracing(config: TracingConfig) -> Result<()> {
     global::set_text_map_propagator(TraceContextPropagator::new());
 
@@ -46,13 +49,13 @@ pub fn init_tracing(config: TracingConfig) -> Result<()> {
                         .unwrap_or_default()
                 })),
         )
-        .with(otel_layer(config)?)
+        .with(otlp_layer(config)?)
         .try_init()
         .context("initialize tracing subscriber")
 }
 
-/// Create an OpenTelemetry tracing layer
-fn otel_layer<S>(config: TracingConfig) -> Result<impl Layer<S>>
+/// Create an OTLP layer exporting tracing data.
+fn otlp_layer<S>(config: TracingConfig) -> Result<impl Layer<S>>
 where
     S: Subscriber + for<'span> LookupSpan<'span>,
 {
