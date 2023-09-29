@@ -16,6 +16,21 @@ test:
 
 all: fmt check lint test
 
+run-gateway:
+	RUST_LOG=hello_tracing_gateway=debug,info \
+		CONFIG_DIR=hello-tracing-gateway/config \
+		APP__API__PORT=8080 \
+		APP__BACKEND__ENDPOINT=http://localhost:8090 \
+		cargo run -p hello-tracing-gateway \
+		> $HOME/tmp/hello-tracing-gateway.log
+
+run-backend:
+	RUST_LOG=hello_tracing_backend=debug,info \
+		CONFIG_DIR=hello-tracing-backend/config \
+		APP__API__PORT=8090 \
+		cargo run -p hello-tracing-backend \
+		> $HOME/tmp/hello-tracing-backend.log
+
 docker:
 	docker build \
 		--build-arg RUST_VERSION={{rust_version}} \
