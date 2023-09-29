@@ -532,7 +532,7 @@ checksum = "95505c38b4572b2d910cecb0281560f54b440a19336cbbcb27bf6ce6adc6f5a8"
 
 [[package]]
 name = "hello-tracing-backend"
-version = "0.3.0"
+version = "1.0.0"
 dependencies = [
  "anyhow",
  "axum",
@@ -557,7 +557,7 @@ dependencies = [
 
 [[package]]
 name = "hello-tracing-common"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "anyhow",
  "axum",
@@ -579,7 +579,7 @@ dependencies = [
 
 [[package]]
 name = "hello-tracing-gateway"
-version = "0.3.0"
+version = "1.0.0"
 dependencies = [
  "anyhow",
  "axum",
