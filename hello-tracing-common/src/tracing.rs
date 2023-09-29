@@ -2,14 +2,11 @@ use anyhow::{Context, Result};
 use opentelemetry::{
     global, runtime,
     sdk::{propagation::TraceContextPropagator, trace, Resource},
-    trace::TraceContextExt,
     KeyValue,
 };
 use opentelemetry_otlp::WithExportConfig;
 use serde::Deserialize;
-use std::{collections::HashMap, iter};
 use tracing::{error, Subscriber};
-use tracing_opentelemetry::OtelData;
 use tracing_subscriber::{
     fmt, layer::SubscriberExt, registry::LookupSpan, util::SubscriberInitExt, EnvFilter, Layer,
 };
@@ -32,23 +29,7 @@ pub fn init_tracing(config: TracingConfig) -> Result<()> {
 
     tracing_subscriber::registry()
         .with(EnvFilter::from_default_env())
-        .with(
-            fmt::layer()
-                .json()
-                .with_span_list(false)
-                .with_extra_fields(Box::new(|extensions| {
-                    extensions
-                        .get::<OtelData>()
-                        .map(|otel_data| {
-                            let trace_id = otel_data.parent_cx.span().span_context().trace_id();
-                            HashMap::from_iter(iter::once((
-                                "trace_id".to_string(),
-                                trace_id.to_string(),
-                            )))
-                        })
-                        .unwrap_or_default()
-                })),
-        )
+        .with(fmt::layer().json())
         .with(otlp_layer(config)?)
         .try_init()
         .context("initialize tracing subscriber")

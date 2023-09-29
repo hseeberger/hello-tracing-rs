@@ -4,9 +4,10 @@ members = [
   "hello-tracing-common",
   "hello-tracing-gateway",
 ]
+resolver = "2"
 
 [workspace.package]
-rust-version  = "1.71.0"
+rust-version  = "1.72.0"
 edition       = "2021"
 authors       = [ "Heiko Seeberger <git@heikoseeberger.de>" ]
 license       = "Apache-2.0"
@@ -34,11 +35,11 @@ tower                 = { version = "0.4" }
 tower-http            = { version = "0.4", features = [ "trace" ] }
 tracing               = { version = "0.1", default-features = false }
 tracing-opentelemetry = { version = "0.19", default-features = false }
-tracing-subscriber    = { version = "0.3", default-features = false, features = [ "env-filter", "fmt", "json", "extra-fields" ] }
+tracing-subscriber    = { version = "0.3", default-features = false, features = [ "env-filter", "fmt", "json" ] }
 walkdir               = { version = "2.3" }
 
-[patch.crates-io]
-tracing-opentelemetry = { git = "https://github.com/hseeberger/tracing-opentelemetry", branch = "build/patch-tracing-subscriber-trace-id" }
-tracing               = { git = "https://github.com/hseeberger/tracing", branch = "feat/tracing-subscriber-trace-id-0.1.x" }
-tracing-core          = { git = "https://github.com/hseeberger/tracing", branch = "feat/tracing-subscriber-trace-id-0.1.x" }
-tracing-subscriber    = { git = "https://github.com/hseeberger/tracing", branch = "feat/tracing-subscriber-trace-id-0.1.x" }
+# [patch.crates-io]
+# tracing-opentelemetry = { git = "https://github.com/hseeberger/tracing-opentelemetry", branch = "build/patch-tracing-subscriber-trace-id" }
+# tracing               = { git = "https://github.com/hseeberger/tracing", branch = "feat/tracing-subscriber-trace-id-0.1.x" }
+# tracing-core          = { git = "https://github.com/hseeberger/tracing", branch = "feat/tracing-subscriber-trace-id-0.1.x" }
+# tracing-subscriber    = { git = "https://github.com/hseeberger/tracing", branch = "feat/tracing-subscriber-trace-id-0.1.x" }
