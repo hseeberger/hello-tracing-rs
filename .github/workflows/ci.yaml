@@ -12,7 +12,7 @@ on:
       - main
 
 jobs:
-  fmt-lint-test:
+  ci:
     runs-on: ubuntu-latest
     steps:
       - name: Check out
@@ -26,17 +26,22 @@ jobs:
           rustup component add rustfmt --toolchain nightly
           # rustup component add clippy --toolchain nightly
 
+      - name: Install just
+        uses: taiki-e/install-action@v2
+        with:
+          tool: just
+
       - name: Install protoc
         uses: arduino/setup-protoc@v2
 
       - name: Set up Rust cache
         uses: Swatinem/rust-cache@v2
 
-      - name: Check code format (cargo fmt)
-        run: cargo +nightly fmt --check
+      - name: Check code format
+        run: just fmt_check
 
-      - name: Lint (cargo clippy)
-        run: cargo clippy --no-deps -- -D warnings
+      - name: Run linter
+        run: just lint
 
-      - name: Test (cargo test)
-        run: cargo test
+      - name: Run tests
+        run: just test

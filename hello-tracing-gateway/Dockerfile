@@ -1,4 +1,4 @@
-ARG RUST_VERSION=1.70.0
+ARG RUST_VERSION=1.72.1
 
 FROM rust:${RUST_VERSION}-bullseye AS builder
 RUN apt-get update && \
