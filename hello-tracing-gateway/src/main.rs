@@ -4,28 +4,42 @@ mod backend;
 use crate::backend::Backend;
 use anyhow::{Context, Result};
 use configured::Configured;
-use hello_tracing_common::tracing::{init_tracing, TracingConfig};
+use hello_tracing_common::{
+    log_error,
+    tracing::{init_tracing, TracingConfig},
+};
 use serde::Deserialize;
+use std::panic;
 use tracing::{error, info};
 
 #[tokio::main]
-async fn main() -> Result<()> {
-    let config = Config::load().context("load configuration")?;
-    init_tracing(config.tracing.clone()).context("initialize tracing")?;
+async fn main() {
+    // Load configuration first, because needed for tracing initialization.
+    let config = match Config::load().context("load configuration") {
+        Ok(config) => config,
+        Err(error) => {
+            log_error(error);
+            return;
+        }
+    };
 
-    info!(?config, "starting");
+    // If tracing initialization fails, nevertheless emit a structured log event.
+    if let Err(error) = init_tracing(config.tracing.clone()) {
+        log_error(error);
+        return;
+    }
 
-    let backend = Backend::new(config.backend);
-    let result = api::serve(config.api, backend).await;
+    // Replace the default panic hook with one that uses structured logging at ERROR level.
+    panic::set_hook(Box::new(|panic| error!(%panic, "process panicked")));
 
-    if let Err(error) = result {
+    // Run and log any error.
+    if let Err(error) = run(config).await {
         error!(
             error = format!("{error:#}"),
             backtrace = %error.backtrace(),
-            "hello-tracing-gateway exited with ERROR"
+            "process exited with ERROR"
         );
     };
-    Ok(())
 }
 
 #[derive(Debug, Deserialize)]
@@ -34,4 +48,11 @@ struct Config {
     api: api::Config,
     backend: backend::Config,
     tracing: TracingConfig,
+}
+
+async fn run(config: Config) -> Result<()> {
+    info!(?config, "starting");
+
+    let backend = Backend::new(config.backend);
+    api::serve(config.api, backend).await
 }

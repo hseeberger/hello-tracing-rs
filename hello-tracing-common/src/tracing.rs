@@ -29,7 +29,7 @@ pub fn init_tracing(config: TracingConfig) -> Result<()> {
 
     tracing_subscriber::registry()
         .with(EnvFilter::from_default_env())
-        .with(fmt::layer().json())
+        .with(fmt::layer().json().flatten_event(true))
         .with(otlp_layer(config)?)
         .try_init()
         .context("initialize tracing subscriber")

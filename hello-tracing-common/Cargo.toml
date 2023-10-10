@@ -21,6 +21,7 @@ opentelemetry-otlp    = { workspace = true }
 prost                 = { workspace = true }
 serde                 = { workspace = true }
 serde_json            = { workspace = true }
+time                  = { workspace = true }
 tokio                 = { workspace = true }
 tonic                 = { workspace = true }
 tower                 = { workspace = true }
