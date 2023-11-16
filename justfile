@@ -1,21 +1,31 @@
 set shell := ["bash", "-uc"]
 
 check:
-	cargo check --tests
+	@echo "RUSTUP_TOOLCHAIN is ${RUSTUP_TOOLCHAIN:-not set}"
+	cargo check --features axum --tests
+	cargo check --features poem-openapi --tests
 
 fmt:
-	cargo +nightly fmt
+	@echo "RUSTUP_TOOLCHAIN is ${RUSTUP_TOOLCHAIN:-not set}"
+	cargo fmt
 
 fmt-check:
-	cargo +nightly fmt --check
+	@echo "RUSTUP_TOOLCHAIN is ${RUSTUP_TOOLCHAIN:-not set}"
+	cargo fmt --check
 
 lint:
-	cargo clippy --no-deps -- -D warnings
+	@echo "RUSTUP_TOOLCHAIN is ${RUSTUP_TOOLCHAIN:-not set}"
+	cargo clippy --all-features --no-deps -- -D warnings
 
 test:
-	cargo test
+	@echo "RUSTUP_TOOLCHAIN is ${RUSTUP_TOOLCHAIN:-not set}"
+	cargo test --all-features
 
-all: fmt check lint test
+fix:
+	@echo "RUSTUP_TOOLCHAIN is ${RUSTUP_TOOLCHAIN:-not set}"
+	cargo fix --allow-dirty --allow-staged
+
+all: check fmt lint test
 
 run-gateway:
 	RUST_LOG=hello_tracing_gateway=debug,info \
