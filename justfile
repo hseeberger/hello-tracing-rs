@@ -6,7 +6,7 @@ check:
 fmt:
 	cargo +nightly fmt
 
-fmt_check:
+fmt-check:
 	cargo +nightly fmt --check
 
 lint:
