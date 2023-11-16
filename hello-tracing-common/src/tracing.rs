@@ -1,12 +1,8 @@
 use anyhow::{Context, Result};
-use opentelemetry::{
-    global, runtime,
-    sdk::{propagation::TraceContextPropagator, trace, Resource},
-    KeyValue,
-};
+use opentelemetry::{global, KeyValue};
 use opentelemetry_otlp::WithExportConfig;
+use opentelemetry_sdk::{propagation::TraceContextPropagator, runtime, trace, Resource};
 use serde::Deserialize;
-
 use tracing::{error, Subscriber};
 use tracing_subscriber::{
     fmt, layer::SubscriberExt, registry::LookupSpan, util::SubscriberInitExt, EnvFilter, Layer,

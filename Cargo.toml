@@ -19,27 +19,22 @@ publish       = false
 [workspace.dependencies]
 anyhow                = { version = "1.0", features = [ "backtrace" ] }
 axum                  = { version = "0.6", features = [ "http2", "json" ] }
-configured            = { version = "0.5" }
-opentelemetry         = { version = "0.19", default-features = false, features = [ "rt-tokio" ] }
-opentelemetry-http    = { version = "0.8", features = [ "reqwest" ] }
-opentelemetry-otlp    = { version = "0.12", default-features = false, features = [ "trace", "grpc-tonic" ] }
-prost                 = { version = "0.11" }
+configured            = { version = "0.7" }
+opentelemetry         = { version = "0.21" }
+opentelemetry_sdk     = { version = "0.21", features = [ "rt-tokio" ] }
+opentelemetry-http    = { version = "0.10", features = [ "reqwest" ] }
+opentelemetry-otlp    = { version = "0.14", default-features = false, features = [ "trace", "grpc-tonic" ] }
+prost                 = { version = "0.12" }
 serde                 = { version = "1.0", features = [ "derive" ] }
 serde_json            = { version = "1.0" }
 time                  = { version = "0.3", features = [ "formatting" ] }
 tokio                 = { version = "1", features = [ "macros", "rt-multi-thread", "signal" ] }
 tokio-stream          = { version = "0.1", features = [ "fs" ] }
-tonic                 = { version = "0.9" }
-tonic-build           = { version = "0.9" }
+tonic                 = { version = "0.10" }
+tonic-build           = { version = "0.10" }
 tower                 = { version = "0.4" }
 tower-http            = { version = "0.4", features = [ "trace" ] }
 tracing               = { version = "0.1", default-features = false }
-tracing-opentelemetry = { version = "0.19", default-features = false }
+tracing-opentelemetry = { version = "0.22", default-features = false }
 tracing-subscriber    = { version = "0.3", default-features = false, features = [ "env-filter", "fmt", "json" ] }
-walkdir               = { version = "2.3" }
-
-# [patch.crates-io]
-# tracing-opentelemetry = { git = "https://github.com/hseeberger/tracing-opentelemetry", branch = "build/patch-tracing-subscriber-trace-id" }
-# tracing               = { git = "https://github.com/hseeberger/tracing", branch = "feat/tracing-subscriber-trace-id-0.1.x" }
-# tracing-core          = { git = "https://github.com/hseeberger/tracing", branch = "feat/tracing-subscriber-trace-id-0.1.x" }
-# tracing-subscriber    = { git = "https://github.com/hseeberger/tracing", branch = "feat/tracing-subscriber-trace-id-0.1.x" }
+walkdir               = { version = "2.4" }
