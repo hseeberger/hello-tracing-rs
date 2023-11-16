@@ -5,7 +5,7 @@ use time::{format_description::well_known::Rfc3339, OffsetDateTime};
 pub mod otel;
 pub mod tracing;
 
-pub fn log_error(error: impl Display) {
+pub fn log_error(error: &impl Display) {
     let now = OffsetDateTime::now_utc().format(&Rfc3339).unwrap();
     let error = serde_json::to_string(&json!({
         "timestamp": now,
