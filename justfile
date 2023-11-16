@@ -2,8 +2,7 @@ set shell := ["bash", "-uc"]
 
 check:
 	@echo "RUSTUP_TOOLCHAIN is ${RUSTUP_TOOLCHAIN:-not set}"
-	cargo check --features axum --tests
-	cargo check --features poem-openapi --tests
+	cargo check --tests
 
 fmt:
 	@echo "RUSTUP_TOOLCHAIN is ${RUSTUP_TOOLCHAIN:-not set}"
@@ -15,11 +14,11 @@ fmt-check:
 
 lint:
 	@echo "RUSTUP_TOOLCHAIN is ${RUSTUP_TOOLCHAIN:-not set}"
-	cargo clippy --all-features --no-deps -- -D warnings
+	cargo clippy --no-deps -- -D warnings
 
 test:
 	@echo "RUSTUP_TOOLCHAIN is ${RUSTUP_TOOLCHAIN:-not set}"
-	cargo test --all-features
+	cargo test
 
 fix:
 	@echo "RUSTUP_TOOLCHAIN is ${RUSTUP_TOOLCHAIN:-not set}"
