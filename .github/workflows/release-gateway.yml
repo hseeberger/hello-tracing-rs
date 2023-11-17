@@ -12,6 +12,32 @@ jobs:
       - name: Check out
         uses: actions/checkout@v4
 
+      - name: Install Rust toolchain
+        run: |
+          toolchain=$(grep channel rust-toolchain.toml | sed -r 's/channel = "(.*)"/\1/')
+          echo "installing toolchain $toolchain from rust-toolchain.toml"
+          rm /home/runner/.cargo/bin/rustfmt
+          rustup toolchain install $toolchain --profile minimal
+          rustup component add --toolchain $toolchain rustfmt
+          rustup component add --toolchain $toolchain clippy
+
+      - name: Install just
+        uses: taiki-e/install-action@v2
+        with:
+          tool: just
+
+      - name: Build
+        run: just check
+
+      - name: Check code format
+        run: just fmt-check
+
+      - name: Run linter
+        run: just lint
+
+      - name: Run tests
+        run: just test
+
       - name: Determine version
         id: version
         run: |
@@ -20,32 +46,22 @@ jobs:
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
       - name: Docker metadata
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         id: meta
         with:
           images: hseeberger/hello-tracing-gateway
           tags: type=semver,pattern={{version}},value=${{ steps.version.outputs.version }}
 
       - name: Login to DockerHub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Docker build and push hello-tracing-backend
-        uses: docker/build-push-action@v4
-        with:
-          context: "."
-          file: hello-tracing-backend/Dockerfile
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-
       - name: Docker build and push hello-tracing-gateway
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
-          context: "."
           file: hello-tracing-gateway/Dockerfile
-          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          push: true
