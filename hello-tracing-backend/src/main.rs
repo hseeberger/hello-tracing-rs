@@ -1,5 +1,3 @@
-#![feature(result_option_inspect)]
-
 mod api;
 
 use anyhow::{Context, Result};

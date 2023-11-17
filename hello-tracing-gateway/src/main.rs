@@ -1,5 +1,3 @@
-#![feature(result_option_inspect)]
-
 mod api;
 mod backend;
 
