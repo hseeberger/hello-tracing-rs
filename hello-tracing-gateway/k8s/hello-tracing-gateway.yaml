@@ -48,5 +48,11 @@ spec:
               path: /
               port: http
           env:
+            - name: HOST_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
             - name: APP__BACKEND__ENDPOINT
               value: http://hello-tracing-backend-grpc:80
+            - name: APP__TRACING__OTLP_EXPORTER_ENDPOINT
+              value: http://$(HOST_IP):4317

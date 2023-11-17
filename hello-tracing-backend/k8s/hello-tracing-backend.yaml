@@ -46,3 +46,10 @@ spec:
           # readinessProbe:
           #   grpc:
           #     port: 8080
+          env:
+            - name: HOST_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: APP__TRACING__OTLP_EXPORTER_ENDPOINT
+              value: http://$(HOST_IP):4317
