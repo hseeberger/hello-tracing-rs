@@ -1,2 +1,3 @@
-pre-release-commit-message = "release"
-tag-message                = "release[{{crate_name}}]: {{version}}"
+pre-release-commit-message = "build({{crate_name}}): release version {{version}}"
+tag-message                = "release {{crate_name}} version {{version}}"
+consolidate-commits        = false

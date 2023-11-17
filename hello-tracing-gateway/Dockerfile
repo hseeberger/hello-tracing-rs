@@ -1,4 +1,4 @@
-ARG RUST_VERSION=1.73.0
+ARG RUST_VERSION=1.74.0
 
 FROM rust:${RUST_VERSION}-bullseye AS builder
 RUN apt-get update && \
@@ -12,4 +12,4 @@ COPY --from=builder /root/hello-tracing-rs/target/release/hello-tracing-gateway 
 COPY --from=builder /root/hello-tracing-rs/hello-tracing-gateway/config /opt/hello-tracing-gateway/config
 WORKDIR /opt/hello-tracing-gateway
 ENTRYPOINT ["hello-tracing-gateway"]
-EXPOSE 80/tcp
+EXPOSE 8080/tcp

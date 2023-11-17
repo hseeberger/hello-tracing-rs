@@ -1,9 +1,9 @@
 api:
   addr: 0.0.0.0
-  port: 80
+  port: 8080
 
 backend:
-  endpoint: http://localhost:90
+  # endpoint: ...
 
 tracing:
   service-name: hello-tracing-gateway
