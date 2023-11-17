@@ -26,6 +26,11 @@ jobs:
         with:
           tool: just
 
+      - name: Install protoc
+        uses: arduino/setup-protoc@v2
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build
         run: just check
 
