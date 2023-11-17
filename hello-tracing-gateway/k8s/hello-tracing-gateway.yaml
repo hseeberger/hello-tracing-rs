@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-tracing-gateway-http
+  namespace: hello-tracing
+spec:
+  selector:
+    app: hello-tracing-gateway
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-tracing-gateway
+  namespace: hello-tracing
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hello-tracing-gateway
+  template:
+    metadata:
+      name: hello-tracing-gateway
+      namespace: hello-tracing
+      labels:
+        app: hello-tracing-gateway
+    spec:
+      containers:
+        - name: hello-tracing-gateway
+          image: hseeberger/hello-tracing-gateway:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+          resources:
+            requests:
+              cpu: 25m
+              memory: 25Mi
+            limits:
+              cpu: 100m
+              memory: 100Mi
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          env:
+            - name: APP__BACKEND__ENDPOINT
+              value: http://hello-tracing-backend-grpc:80

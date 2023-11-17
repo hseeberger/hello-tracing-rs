@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-tracing-backend-grpc
+  namespace: hello-tracing
+spec:
+  selector:
+    app: hello-tracing-backend
+  ports:
+    - name: grpc
+      port: 80
+      targetPort: grpc
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-tracing-backend
+  namespace: hello-tracing
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hello-tracing-backend
+  template:
+    metadata:
+      name: hello-tracing-backend
+      namespace: hello-tracing
+      labels:
+        app: hello-tracing-backend
+    spec:
+      containers:
+        - name: hello-tracing-backend
+          image: hseeberger/hello-tracing-backend:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: grpc
+              containerPort: 8080
+          resources:
+            requests:
+              cpu: 25m
+              memory: 25Mi
+            limits:
+              cpu: 100m
+              memory: 100Mi
+          # readinessProbe:
+          #   grpc:
+          #     port: 8080
