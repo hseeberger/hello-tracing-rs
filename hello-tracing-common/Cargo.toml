@@ -1,6 +1,6 @@
 [package]
 name          = "hello-tracing-common"
-version       = "1.0.1"
+version       = "1.0.2"
 description   = "hello-tracing-backend"
 edition       = { workspace = true }
 authors       = { workspace = true }
