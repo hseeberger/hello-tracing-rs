@@ -10,6 +10,7 @@ RUN cargo build --release --package hello-tracing-backend
 FROM debian:bullseye-slim
 COPY --from=builder /root/hello-tracing-rs/target/release/hello-tracing-backend /usr/local/bin/hello-tracing-backend
 COPY --from=builder /root/hello-tracing-rs/hello-tracing-backend/config /opt/hello-tracing-backend/config
+ENV RUST_LOG="hello_tracing_backend=debug,info"
 WORKDIR /opt/hello-tracing-backend
 ENTRYPOINT ["hello-tracing-backend"]
 EXPOSE 8080/tcp
