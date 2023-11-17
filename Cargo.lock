@@ -566,7 +566,7 @@ dependencies = [
 
 [[package]]
 name = "hello-tracing-gateway"
-version = "1.0.2"
+version = "1.0.3"
 dependencies = [
  "anyhow",
  "axum",
