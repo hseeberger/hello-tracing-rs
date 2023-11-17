@@ -1,0 +1,38 @@
+#!/bin/bash
+
+usage() {
+  echo "Deploy to k8s"
+  echo "  -c  Context for kubectl"
+  echo "  -v  Version of the Docker image, i.e. the value of the tag"
+  echo "  -h  Print usage instructions"
+}
+
+while getopts "v:c:h" opt; do
+  case $opt in
+  c)
+    KUBECTL_CONTEXT=$OPTARG
+    ;;
+  v)
+    VERSION=$OPTARG
+    ;;
+  h)
+    usage
+    exit 0
+    ;;
+  esac
+done
+
+if [ -z "$VERSION" ]; then
+  VERSION=$(git tag | grep hello-tracing-gateway | tr -d 'hello-tracing-gateway-' | sort --version-sort -r | head -1 | cut -c 2-)
+  if [ -z "$VERSION" ]; then
+    echo "ERROR: cannot determine version" >&2
+    exit 1
+  fi
+fi
+export VERSION
+echo "Deploying version $VERSION"
+
+current_dir=$(pwd)
+cd $(dirname $0)
+kustomize build | envsubst | kubectl apply -f -
+cd $current_dir
