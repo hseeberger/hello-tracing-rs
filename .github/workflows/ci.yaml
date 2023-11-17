@@ -6,6 +6,7 @@ on:
       - main
     tags-ignore:
       - hello-tracing-backend-v*
+      - hello-tracing-common-v*
       - hello-tracing-gateway-v*
   pull_request:
     branches:
