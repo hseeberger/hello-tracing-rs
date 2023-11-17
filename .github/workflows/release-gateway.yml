@@ -6,7 +6,7 @@ on:
       - hello-tracing-gateway-v*
 
 jobs:
-  docker:
+  release:
     runs-on: ubuntu-latest
     steps:
       - name: Check out
