@@ -32,14 +32,14 @@ run-gateway port="8080" backend_port="8081":
 		APP__API__PORT={{port}} \
 		APP__BACKEND__ENDPOINT=http://localhost:{{backend_port}} \
 		cargo run -p hello-tracing-gateway \
-		> $HOME/tmp/hello-tracing-gateway.log
+		| jq
 
 run-backend port="8081":
 	RUST_LOG=hello_tracing_backend=debug,info \
 		CONFIG_DIR=hello-tracing-backend/config \
 		APP__API__PORT={{port}} \
 		cargo run -p hello-tracing-backend \
-		> $HOME/tmp/hello-tracing-backend.log
+		| jq
 
 docker tag="latest":
 	docker build \
