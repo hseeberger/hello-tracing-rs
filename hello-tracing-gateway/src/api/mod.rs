@@ -64,9 +64,9 @@ fn make_span(request: &Request<Body>) -> Span {
 
     // Disable (well, silence) spans/traces for root spans.
     if path.is_empty() || path == "/" {
-        trace_span!("incoming request", ?headers, trace_id = field::Empty)
+        trace_span!("incoming request", path, ?headers, trace_id = field::Empty)
     } else {
-        info_span!("incoming request", ?headers, trace_id = field::Empty)
+        info_span!("incoming request", path, ?headers, trace_id = field::Empty)
     }
 }
 
