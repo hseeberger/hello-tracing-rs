@@ -1,6 +1,6 @@
 [package]
 name          = "hello-tracing-gateway"
-version       = "1.0.5"
+version       = "1.0.6"
 description   = "hello-tracing-gateway"
 edition       = { workspace = true }
 authors       = { workspace = true }
