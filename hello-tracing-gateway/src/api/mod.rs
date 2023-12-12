@@ -18,7 +18,7 @@ use tokio::{
 };
 use tower::ServiceBuilder;
 use tower_http::trace::TraceLayer;
-use tracing::{field, info_span, Span};
+use tracing::{field, info_span, trace_span, Span};
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -59,7 +59,15 @@ async fn ready() -> impl IntoResponse {
 
 fn make_span(request: &Request<Body>) -> Span {
     let headers = request.headers();
-    info_span!("incoming request", ?headers, trace_id = field::Empty)
+
+    let path = request.uri().path();
+
+    // Disable (well, silence) spans/traces for root spans.
+    if path.is_empty() || path == "/" {
+        trace_span!("incoming request", ?headers, trace_id = field::Empty)
+    } else {
+        info_span!("incoming request", ?headers, trace_id = field::Empty)
+    }
 }
 
 async fn shutdown_signal(shutdown_timeout: Option<Duration>) {
