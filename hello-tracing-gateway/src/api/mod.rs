@@ -2,12 +2,13 @@ mod v0;
 
 use crate::backend::Backend;
 use anyhow::{Context, Result};
+use api_version::api_version;
 use axum::{
     body::Body,
     http::{Request, StatusCode},
     response::IntoResponse,
     routing::get,
-    Router, Server,
+    Router, Server, ServiceExt,
 };
 use hello_tracing_common::otel::http::{accept_trace, record_trace_id};
 use serde::Deserialize;
@@ -16,7 +17,7 @@ use tokio::{
     signal::unix::{signal, SignalKind},
     time,
 };
-use tower::ServiceBuilder;
+use tower::{Layer, ServiceBuilder};
 use tower_http::trace::TraceLayer;
 use tracing::{field, info_span, trace_span, Span};
 
@@ -45,6 +46,7 @@ pub async fn serve(config: Config, backend: Backend) -> Result<()> {
                 .map_request(accept_trace)
                 .map_request(record_trace_id),
         );
+    let app = api_version!(0..=0).layer(app);
 
     Server::bind(&(addr, port).into())
         .serve(app.into_make_service())
