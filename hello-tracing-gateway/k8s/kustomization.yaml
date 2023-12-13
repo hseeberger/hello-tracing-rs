@@ -3,5 +3,5 @@ kind: Kustomization
 resources:
   - hello-tracing-gateway.yaml
 images:
-  - name: hseeberger/hello-tracing-backend
+  - name: hseeberger/hello-tracing-gateway
     newTag: $VERSION
