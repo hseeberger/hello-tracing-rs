@@ -1,7 +1,9 @@
-use axum::{body::Body, http::Request};
-use opentelemetry::{global, trace::TraceContextExt};
-use opentelemetry_http::HeaderExtractor;
-use tracing::Span;
+use axum::{
+    body::Body,
+    http::{HeaderMap, Request},
+};
+use opentelemetry::{global, propagation::Extractor, trace::TraceContextExt};
+use tracing::{warn, Span};
 use tracing_opentelemetry::OpenTelemetrySpanExt;
 
 /// Trace context propagation: associate the current span with the OTel trace of the given request,
@@ -24,4 +26,22 @@ pub fn record_trace_id(request: Request<Body>) -> Request<Body> {
     span.record("trace_id", trace_id.to_string());
 
     request
+}
+
+struct HeaderExtractor<'a>(&'a HeaderMap);
+
+impl<'a> Extractor for HeaderExtractor<'a> {
+    fn get(&self, key: &str) -> Option<&str> {
+        self.0.get(key).and_then(|v| {
+            let s = v.to_str();
+            if let Err(ref error) = s {
+                warn!(%error, ?v, "cannot convert header value to ASCII")
+            };
+            s.ok()
+        })
+    }
+
+    fn keys(&self) -> Vec<&str> {
+        self.0.keys().map(|k| k.as_str()).collect()
+    }
 }

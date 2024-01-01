@@ -2,7 +2,7 @@ mod v0;
 
 use crate::backend::Backend;
 use anyhow::{Context, Result};
-use api_version::api_version;
+use api_version::{api_version, array_macro};
 use axum::{
     body::Body,
     http::{Request, StatusCode},

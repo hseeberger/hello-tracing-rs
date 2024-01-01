@@ -13,26 +13,34 @@ use std::panic;
 use tracing::{error, info};
 
 #[tokio::main]
-async fn main() -> Result<()> {
+async fn main() {
     // Load configuration first, because needed for tracing initialization.
-    let config = Config::load()
-        .context("load configuration")
-        .inspect_err(log_error)?;
+    let config = match Config::load().context("load configuration") {
+        Ok(config) => config,
+        Err(error) => {
+            log_error(&error);
+            return;
+        }
+    };
 
     // If tracing initialization fails, nevertheless emit a structured log event.
-    init_tracing(config.tracing.clone()).inspect_err(log_error)?;
+    let result = init_tracing(config.tracing.clone());
+    if let Err(ref error) = result {
+        log_error(error);
+        return;
+    };
 
     // Replace the default panic hook with one that uses structured logging at ERROR level.
     panic::set_hook(Box::new(|panic| error!(%panic, "process panicked")));
 
     // Run and log any error.
-    run(config).await.inspect_err(|error| {
+    if let Err(ref error) = run(config).await {
         error!(
             error = format!("{error:#}"),
             backtrace = %error.backtrace(),
             "process exited with ERROR"
         );
-    })
+    }
 }
 
 #[derive(Debug, Deserialize)]
