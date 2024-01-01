@@ -3,7 +3,7 @@ name: release-hello-tracing-backend
 on:
   push:
     tags:
-      - v*
+      - hello-tracing-backend-v*
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
