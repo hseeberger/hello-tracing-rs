@@ -15,13 +15,11 @@ publish       = { workspace = true }
 hello-tracing-common  = { path = "../hello-tracing-common" }
 anyhow                = { workspace = true }
 api-version           = { workspace = true }
-array-macro           = { workspace = true }
 async-trait           = { workspace = true }
 axum                  = { workspace = true }
 configured            = { workspace = true }
 humantime-serde       = { workspace = true }
 opentelemetry         = { workspace = true }
-opentelemetry-http    = { workspace = true }
 opentelemetry-otlp    = { workspace = true }
 prost                 = { workspace = true }
 serde                 = { workspace = true }

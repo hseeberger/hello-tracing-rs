@@ -19,14 +19,12 @@ publish       = false
 [workspace.dependencies]
 anyhow                = { version = "1.0", features = [ "backtrace" ] }
 api-version           = { git = "https://github.com/scndcloud/api-version", branch = "axum-0.6" }
-array-macro           = { version = "2.1" }
 async-trait           = { version = "0.1" }
 axum                  = { version = "0.6", features = [ "http2", "json" ] }
 configured            = { version = "0.7" }
 humantime-serde       = { version = "1.1" }
 opentelemetry         = { version = "0.21" }
 opentelemetry_sdk     = { version = "0.21", features = [ "rt-tokio" ] }
-opentelemetry-http    = { version = "0.10", features = [ "reqwest" ] }
 opentelemetry-otlp    = { version = "0.14", default-features = false, features = [ "trace", "grpc-tonic" ] }
 prost                 = { version = "0.12" }
 serde                 = { version = "1.0", features = [ "derive" ] }
