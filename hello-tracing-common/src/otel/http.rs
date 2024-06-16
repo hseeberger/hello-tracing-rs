@@ -1,14 +1,11 @@
-use axum::{
-    body::Body,
-    http::{HeaderMap, Request},
-};
+use axum::http::{HeaderMap, Request};
 use opentelemetry::{global, propagation::Extractor, trace::TraceContextExt};
 use tracing::{warn, Span};
 use tracing_opentelemetry::OpenTelemetrySpanExt;
 
 /// Trace context propagation: associate the current span with the OTel trace of the given request,
 /// if any and valid.
-pub fn accept_trace(request: Request<Body>) -> Request<Body> {
+pub fn accept_trace<B>(request: Request<B>) -> Request<B> {
     // Current context, if no or invalid data is received.
     let parent_context = global::get_text_map_propagator(|propagator| {
         propagator.extract(&HeaderExtractor(request.headers()))
@@ -19,7 +16,7 @@ pub fn accept_trace(request: Request<Body>) -> Request<Body> {
 }
 
 /// Recorcd the OTel trace ID of the given request as "trace_id" field in the current span.
-pub fn record_trace_id(request: Request<Body>) -> Request<Body> {
+pub fn record_trace_id<B>(request: Request<B>) -> Request<B> {
     let span = Span::current();
 
     let trace_id = span.context().span().span_context().trace_id();

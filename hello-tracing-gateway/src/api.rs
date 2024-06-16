@@ -2,20 +2,20 @@ mod v0;
 
 use crate::backend::Backend;
 use anyhow::{Context, Result};
-use api_version::{api_version, array_macro};
+use api_version::api_version;
 use axum::{
     body::Body,
     http::{Request, StatusCode},
     response::IntoResponse,
     routing::get,
-    Router, Server, ServiceExt,
+    Router, ServiceExt,
 };
 use hello_tracing_common::otel::http::{accept_trace, record_trace_id};
 use serde::Deserialize;
-use std::{net::IpAddr, time::Duration};
+use std::net::IpAddr;
 use tokio::{
+    net::TcpListener,
     signal::unix::{signal, SignalKind},
-    time,
 };
 use tower::{Layer, ServiceBuilder};
 use tower_http::trace::TraceLayer;
@@ -26,16 +26,10 @@ use tracing::{field, info_span, trace_span, Span};
 pub struct Config {
     addr: IpAddr,
     port: u16,
-    #[serde(with = "humantime_serde")]
-    shutdown_timeout: Option<Duration>,
 }
 
 pub async fn serve(config: Config, backend: Backend) -> Result<()> {
-    let Config {
-        addr,
-        port,
-        shutdown_timeout,
-    } = config;
+    let Config { addr, port } = config;
 
     let app = Router::new()
         .route("/", get(ready))
@@ -48,9 +42,11 @@ pub async fn serve(config: Config, backend: Backend) -> Result<()> {
         );
     let app = api_version!(0..=0).layer(app);
 
-    Server::bind(&(addr, port).into())
-        .serve(app.into_make_service())
-        .with_graceful_shutdown(shutdown_signal(shutdown_timeout))
+    let listener = TcpListener::bind((addr, port))
+        .await
+        .context("bind TcpListener")?;
+    axum::serve(listener, app.into_make_service())
+        .with_graceful_shutdown(shutdown_signal())
         .await
         .context("run server")
 }
@@ -64,7 +60,7 @@ fn make_span(request: &Request<Body>) -> Span {
 
     let path = request.uri().path();
 
-    // Disable (well, silence) spans/traces for root spans.
+    // Disable (well, silence) spans/traces for root spans (readiness checks).
     if path.is_empty() || path == "/" {
         trace_span!("incoming request", path, ?headers, trace_id = field::Empty)
     } else {
@@ -72,12 +68,9 @@ fn make_span(request: &Request<Body>) -> Span {
     }
 }
 
-async fn shutdown_signal(shutdown_timeout: Option<Duration>) {
+async fn shutdown_signal() {
     signal(SignalKind::terminate())
         .expect("install SIGTERM handler")
         .recv()
         .await;
-    if let Some(shutdown_timeout) = shutdown_timeout {
-        time::sleep(shutdown_timeout).await;
-    }
 }
