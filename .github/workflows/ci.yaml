@@ -73,7 +73,7 @@ jobs:
           tool: just
 
       - name: Install protoc
-        uses: arduino/setup-protoc@v2
+        uses: arduino/setup-protoc@v3
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -126,7 +126,7 @@ jobs:
           tool: just
 
       - name: Install protoc
-        uses: arduino/setup-protoc@v2
+        uses: arduino/setup-protoc@v3
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -154,7 +154,7 @@ jobs:
           tool: just
 
       - name: Install protoc
-        uses: arduino/setup-protoc@v2
+        uses: arduino/setup-protoc@v3
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
