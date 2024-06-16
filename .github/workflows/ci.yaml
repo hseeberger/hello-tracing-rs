@@ -167,7 +167,7 @@ jobs:
 
   dependabot:
     runs-on: ubuntu-latest
-    needs: [doc, lint, test]
+    needs: [lint, test]
     if: github.event_name == 'pull_request' && github.actor == 'dependabot[bot]'
     permissions:
       contents: write
