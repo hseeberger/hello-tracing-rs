@@ -1,4 +1,5 @@
 use anyhow::{Context, Result};
+use error_ext::StdErrorExt;
 use opentelemetry::{global, KeyValue};
 use opentelemetry_otlp::WithExportConfig;
 use opentelemetry_sdk::{propagation::TraceContextPropagator, runtime, trace, Resource};
@@ -21,8 +22,10 @@ pub struct TracingConfig {
 pub fn init_tracing(config: TracingConfig) -> Result<()> {
     global::set_text_map_propagator(TraceContextPropagator::new());
 
-    global::set_error_handler(|error| error!(error = format!("{error:#}"), "otel error"))
-        .context("set error handler")?;
+    global::set_error_handler(
+        |error| error!(target: "otel", error = error.as_chain(), "otel error"),
+    )
+    .context("set error handler")?;
 
     tracing_subscriber::registry()
         .with(EnvFilter::from_default_env())

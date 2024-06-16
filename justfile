@@ -1,22 +1,21 @@
 set shell := ["bash", "-uc"]
 
 check:
-	cargo check --tests
+	cargo check --package hello-tracing-common
+	cargo check --package hello-tracing-backend
+	cargo check --package hello-tracing-gateway
 
-fmt:
-	cargo +nightly fmt
+fmt toolchain="+nightly":
+	cargo {{toolchain}} fmt
 
-fmt-check:
-	cargo +nightly fmt --check
+fmt-check toolchain="+nightly":
+	cargo {{toolchain}} fmt --check
 
 lint:
 	cargo clippy --no-deps -- -D warnings
 
 test:
 	cargo test
-
-coverage:
-	cargo llvm-cov --all-features --workspace --lcov --output-path lcov.info
 
 fix:
 	cargo fix --allow-dirty --allow-staged

@@ -1,3 +1,4 @@
+use error_ext::StdErrorExt;
 use opentelemetry::{global, propagation::Injector};
 use tonic::{
     metadata::{MetadataKey, MetadataMap, MetadataValue},
@@ -27,10 +28,10 @@ impl Injector for MetadataInjector<'_> {
                     self.0.insert(key, value);
                 }
 
-                Err(error) => warn!(value, error = format!("{error:#}"), "parse metadata value"),
+                Err(error) => warn!(value, error = error.as_chain(), "parse metadata value"),
             },
 
-            Err(error) => warn!(key, error = format!("{error:#}"), "parse metadata key"),
+            Err(error) => warn!(key, error = error.as_chain(), "parse metadata key"),
         }
     }
 }
