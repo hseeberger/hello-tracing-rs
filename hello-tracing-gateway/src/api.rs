@@ -5,14 +5,14 @@ use anyhow::{Context, Result};
 use api_version::api_version;
 use axum::{
     body::Body,
-    http::{Request, StatusCode},
+    http::{Request, StatusCode, Uri},
     response::IntoResponse,
     routing::get,
     Router, ServiceExt,
 };
 use hello_tracing_common::otel::http::{accept_trace, record_trace_id};
 use serde::Deserialize;
-use std::net::IpAddr;
+use std::{convert::Infallible, net::IpAddr};
 use tokio::{
     net::TcpListener,
     signal::unix::{signal, SignalKind},
@@ -40,7 +40,7 @@ pub async fn serve(config: Config, backend: Backend) -> Result<()> {
                 .map_request(accept_trace)
                 .map_request(record_trace_id),
         );
-    let app = api_version!(0..=0).layer(app);
+    let app = api_version!(0..=0, ApiVersionFilter).layer(app);
 
     let listener = TcpListener::bind((addr, port))
         .await
@@ -49,6 +49,19 @@ pub async fn serve(config: Config, backend: Backend) -> Result<()> {
         .with_graceful_shutdown(shutdown_signal())
         .await
         .context("run server")
+}
+
+#[derive(Clone)]
+struct ApiVersionFilter;
+
+impl api_version::ApiVersionFilter for ApiVersionFilter {
+    type Error = Infallible;
+
+    async fn filter(&self, uri: &Uri) -> Result<bool, Self::Error> {
+        let path = uri.path();
+        let no_rewrite = (path == "/") || path.starts_with("/api-doc") || path == "/openapi.json";
+        Ok(!no_rewrite)
+    }
 }
 
 async fn ready() -> impl IntoResponse {

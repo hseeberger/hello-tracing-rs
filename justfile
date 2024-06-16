@@ -1,7 +1,9 @@
 set shell := ["bash", "-uc"]
 
 check:
-	cargo check --tests
+	cargo check --package hello-tracing-common
+	cargo check --package hello-tracing-backend
+	cargo check --package hello-tracing-gateway
 
 fmt:
 	cargo +nightly fmt

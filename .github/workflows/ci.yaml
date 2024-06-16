@@ -9,20 +9,63 @@ on:
   pull_request:
     branches:
       - main
+  schedule:
+    - cron: 0 4/12 * * *
   workflow_dispatch:
+    inputs:
+      nightly:
+        description: use latest nightly
+        required: true
+        type: boolean
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  group: ${{github.workflow}}-${{github.head_ref || github.run_id}}
   cancel-in-progress: true
 
 jobs:
+  toolchain:
+    runs-on: ubuntu-latest
+    env:
+      nightly: ${{(github.event.inputs.nightly == 'true' || github.event_name == 'schedule') && 'true' || ''}}
+    outputs:
+      toolchain: ${{steps.set_toolchain.outputs.toolchain}}
+      nightly_toolchain: ${{steps.set_toolchain.outputs.nightly_toolchain}}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set toolchain
+        id: set_toolchain
+        env:
+          toolchain_toml: "rust-toolchain.toml"
+        run: |
+          if [[ -z $nightly ]] && [[ -f $toolchain_toml ]]; then
+            toolchain=$(grep channel $toolchain_toml | sed -r 's/channel = "(.*)"/\1/')
+            echo "using toolchain $toolchain from rust-toolchain.toml"
+            echo "toolchain=$toolchain" >> "$GITHUB_OUTPUT"
+            if [[ $toolchain =~ ^nightly.* ]]; then
+              echo "using nightly_toolchain $toolchain"
+              echo "nightly_toolchain=$toolchain" >> "$GITHUB_OUTPUT"
+            else
+              echo "using nightly_toolchain nightly"
+              echo "nightly_toolchain=nightly" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            toolchain='nightly'
+            echo "using toolchain nightly"
+            echo "toolchain=nightly" >> "$GITHUB_OUTPUT"
+            echo "using nightly_toolchain nightly"
+            echo "nightly_toolchain=nightly" >> "$GITHUB_OUTPUT"
+          fi
+
   check:
     runs-on: ubuntu-latest
+    needs: toolchain
     steps:
       - uses: actions/checkout@v4
 
       - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{needs.toolchain.outputs.toolchain}}
 
       - name: Install just
         uses: taiki-e/install-action@v2
@@ -37,16 +80,20 @@ jobs:
       - uses: Swatinem/rust-cache@v2
 
       - name: just check
-        run: just check
+        run: |
+          rustup override set ${{needs.toolchain.outputs.toolchain}}
+          just check
 
   fmt-check:
     runs-on: ubuntu-latest
+    needs: toolchain
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Rust (nightly for fmt)
-        uses: dtolnay/rust-toolchain@nightly
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@master
         with:
+          toolchain: ${{needs.toolchain.outputs.nightly_toolchain}}
           components: rustfmt
 
       - name: Install just
@@ -57,18 +104,21 @@ jobs:
       - uses: Swatinem/rust-cache@v2
 
       - name: just fmt-check
-        run: just fmt-check
+        run: |
+          rustup override set ${{needs.toolchain.outputs.nightly_toolchain}}
+          just fmt-check ''
 
   lint:
     runs-on: ubuntu-latest
-    needs: [check, fmt-check]
+    needs: [toolchain, check, fmt-check]
     steps:
       - uses: actions/checkout@v4
 
       - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@master
         with:
           components: clippy
+          toolchain: ${{needs.toolchain.outputs.toolchain}}
 
       - name: Install just
         uses: taiki-e/install-action@v2
@@ -83,28 +133,54 @@ jobs:
       - uses: Swatinem/rust-cache@v2
 
       - name: just lint
-        run: just lint
+        run: |
+          rustup override set ${{needs.toolchain.outputs.toolchain}}
+          just lint
 
   test:
     runs-on: ubuntu-latest
-    needs: [check, fmt-check]
+    needs: [toolchain, check, fmt-check]
     steps:
       - uses: actions/checkout@v4
 
       - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
-
-      - name: Install protoc
-        uses: arduino/setup-protoc@v2
+        uses: dtolnay/rust-toolchain@master
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          toolchain: ${{needs.toolchain.outputs.toolchain}}
 
       - name: Install just
         uses: taiki-e/install-action@v2
         with:
           tool: just
 
+      - name: Install protoc
+        uses: arduino/setup-protoc@v2
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
       - uses: Swatinem/rust-cache@v2
 
       - name: just test
-        run: just test
+        run: |
+          rustup override set ${{needs.toolchain.outputs.toolchain}}
+          just test
+
+  dependabot:
+    runs-on: ubuntu-latest
+    needs: [doc, lint, test]
+    if: github.event_name == 'pull_request' && github.actor == 'dependabot[bot]'
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: approve
+        run: gh pr review --approve "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: merge
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

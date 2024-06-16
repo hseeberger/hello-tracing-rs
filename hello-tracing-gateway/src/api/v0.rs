@@ -1,5 +1,4 @@
 use crate::backend::Backend;
-use anyhow::Error;
 use axum::{extract::State, http::StatusCode, response::IntoResponse, routing::get, Router};
 use tracing::{error, instrument};
 
@@ -20,7 +19,7 @@ async fn hello(State(app_state): State<AppState>) -> impl IntoResponse {
     app_state.backend.hello().await.map_err(internal_error)
 }
 
-fn internal_error(error: Error) -> StatusCode {
+fn internal_error(error: anyhow::Error) -> StatusCode {
     error!(
         error = display(format!("{error:#}")),
         backtrace = %error.backtrace(),

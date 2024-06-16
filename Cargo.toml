@@ -22,7 +22,7 @@ api-version           = { git = "https://github.com/scndcloud/api-version" }
 async-trait           = { version = "0.1" }
 axum                  = { version = "0.7", features = [ "http2", "json" ] }
 configured            = { version = "0.7" }
-humantime-serde       = { version = "1.1" }
+error-ext             = { version = "0.2" }
 opentelemetry         = { version = "0.22" }
 opentelemetry_sdk     = { version = "0.22", features = [ "rt-tokio" ] }
 opentelemetry-otlp    = { version = "0.15", default-features = false, features = [ "trace", "grpc-tonic" ] }
