@@ -128,7 +128,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Docker build and push hello-tracing-gateway
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           file: hello-tracing-gateway/Dockerfile
           tags: ${{ steps.meta.outputs.tags }}
