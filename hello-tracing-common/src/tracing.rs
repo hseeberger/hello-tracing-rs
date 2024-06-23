@@ -11,7 +11,7 @@ use tracing_subscriber::{
 
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "kebab-case")]
-pub struct TracingConfig {
+pub struct Config {
     service_name: String,
     otlp_exporter_endpoint: String,
 }
@@ -19,7 +19,7 @@ pub struct TracingConfig {
 /// Initialize tracing: apply an `EnvFilter` using the `RUST_LOG` environment variable to define the
 /// log levels, add a formatter layer logging trace events as JSON and on OpenTelemetry layer
 /// exporting trace data.
-pub fn init_tracing(config: TracingConfig) -> Result<()> {
+pub fn init_tracing(config: Config) -> Result<()> {
     global::set_text_map_propagator(TraceContextPropagator::new());
 
     global::set_error_handler(
@@ -36,7 +36,7 @@ pub fn init_tracing(config: TracingConfig) -> Result<()> {
 }
 
 /// Create an OTLP layer exporting tracing data.
-fn otlp_layer<S>(config: TracingConfig) -> Result<impl Layer<S>>
+fn otlp_layer<S>(config: Config) -> Result<impl Layer<S>>
 where
     S: Subscriber + for<'span> LookupSpan<'span>,
 {

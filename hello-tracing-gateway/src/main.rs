@@ -4,10 +4,7 @@ mod backend;
 use crate::backend::Backend;
 use anyhow::{Context, Result};
 use configured::Configured;
-use hello_tracing_common::{
-    log_error,
-    tracing::{init_tracing, TracingConfig},
-};
+use hello_tracing_common::{log_error, tracing::init_tracing};
 use serde::Deserialize;
 use std::panic;
 use tracing::{error, info};
@@ -48,7 +45,7 @@ async fn main() {
 struct Config {
     api: api::Config,
     backend: backend::Config,
-    tracing: TracingConfig,
+    tracing: hello_tracing_common::tracing::Config,
 }
 
 async fn run(config: Config) -> Result<()> {
