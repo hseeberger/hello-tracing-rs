@@ -1821,7 +1821,7 @@ dependencies = [
 [[package]]
 name = "tonic"
 version = "0.11.0"
-source = "git+https://github.com/hyperium/tonic.git#4c6dffce1808165c15ff40f8cc9a59f9792e3e5a"
+source = "git+https://github.com/hyperium/tonic.git#6a213e9485965db0628591e30577ed81cdaeaf2b"
 dependencies = [
  "async-stream",
  "async-trait",
@@ -1850,7 +1850,7 @@ dependencies = [
 [[package]]
 name = "tonic-build"
 version = "0.11.0"
-source = "git+https://github.com/hyperium/tonic.git#4c6dffce1808165c15ff40f8cc9a59f9792e3e5a"
+source = "git+https://github.com/hyperium/tonic.git#6a213e9485965db0628591e30577ed81cdaeaf2b"
 dependencies = [
  "prettyplease",
  "proc-macro2",
