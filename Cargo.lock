@@ -666,11 +666,11 @@ dependencies = [
  "hello-tracing-common",
  "opentelemetry",
  "opentelemetry-otlp",
- "prost",
+ "prost 0.12.6",
  "serde",
  "serde_json",
  "tokio",
- "tonic 0.11.0 (git+https://github.com/hyperium/tonic.git)",
+ "tonic 0.12.0",
  "tonic-build",
  "tower",
  "tower-http",
@@ -690,12 +690,12 @@ dependencies = [
  "opentelemetry",
  "opentelemetry-otlp",
  "opentelemetry_sdk",
- "prost",
+ "prost 0.12.6",
  "serde",
  "serde_json",
  "time",
  "tokio",
- "tonic 0.11.0 (git+https://github.com/hyperium/tonic.git)",
+ "tonic 0.12.0",
  "tower",
  "tracing",
  "tracing-opentelemetry",
@@ -714,11 +714,11 @@ dependencies = [
  "hello-tracing-common",
  "opentelemetry",
  "opentelemetry-otlp",
- "prost",
+ "prost 0.12.6",
  "serde",
  "serde_json",
  "tokio",
- "tonic 0.11.0 (git+https://github.com/hyperium/tonic.git)",
+ "tonic 0.12.0",
  "tonic-build",
  "tower",
  "tower-http",
@@ -1114,10 +1114,10 @@ dependencies = [
  "opentelemetry-proto",
  "opentelemetry-semantic-conventions",
  "opentelemetry_sdk",
- "prost",
+ "prost 0.12.6",
  "thiserror",
  "tokio",
- "tonic 0.11.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "tonic 0.11.0",
 ]
 
 [[package]]
@@ -1128,8 +1128,8 @@ checksum = "3a8fddc9b68f5b80dae9d6f510b88e02396f006ad48cac349411fbecc80caae4"
 dependencies = [
  "opentelemetry",
  "opentelemetry_sdk",
- "prost",
- "tonic 0.11.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "prost 0.12.6",
+ "tonic 0.11.0",
 ]
 
 [[package]]
@@ -1315,14 +1315,24 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "deb1435c188b76130da55f17a466d252ff7b1418b2ad3e037d127b94e3411f29"
 dependencies = [
  "bytes",
- "prost-derive",
+ "prost-derive 0.12.6",
+]
+
+[[package]]
+name = "prost"
+version = "0.13.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e13db3d3fde688c61e2446b4d843bc27a7e8af269a69440c0308021dc92333cc"
+dependencies = [
+ "bytes",
+ "prost-derive 0.13.1",
 ]
 
 [[package]]
 name = "prost-build"
-version = "0.12.6"
+version = "0.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "22505a5c94da8e3b7c2996394d1c933236c4d743e81a410bcca4e6989fc066a4"
+checksum = "5bb182580f71dd070f88d01ce3de9f4da5021db7115d2e1c3605a754153b77c1"
 dependencies = [
  "bytes",
  "heck",
@@ -1332,7 +1342,7 @@ dependencies = [
  "once_cell",
  "petgraph",
  "prettyplease",
- "prost",
+ "prost 0.13.1",
  "prost-types",
  "regex",
  "syn",
@@ -1353,12 +1363,25 @@ dependencies = [
 ]
 
 [[package]]
-name = "prost-types"
-version = "0.12.6"
+name = "prost-derive"
+version = "0.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9091c90b0a32608e984ff2fa4091273cbdd755d54935c51d520887f4a1dbd5b0"
+checksum = "18bec9b0adc4eba778b33684b7ba3e7137789434769ee3ce3930463ef904cfca"
 dependencies = [
- "prost",
+ "anyhow",
+ "itertools",
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "prost-types"
+version = "0.13.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cee5168b05f49d4b0ca581206eb14a7b22fafd963efe729ac48eb03266e25cc2"
+dependencies = [
+ "prost 0.13.1",
 ]
 
 [[package]]
@@ -1809,7 +1832,7 @@ dependencies = [
  "hyper-timeout 0.4.1",
  "percent-encoding",
  "pin-project",
- "prost",
+ "prost 0.12.6",
  "tokio",
  "tokio-stream",
  "tower",
@@ -1820,8 +1843,8 @@ dependencies = [
 
 [[package]]
 name = "tonic"
-version = "0.11.0"
-source = "git+https://github.com/hyperium/tonic.git#1c327a274c47d18b92a0af7b419fd128e1ff46d6"
+version = "0.12.0"
+source = "git+https://github.com/hyperium/tonic.git#4aad5afa216bdb39f518171888463667a4e4d1f4"
 dependencies = [
  "async-stream",
  "async-trait",
@@ -1837,7 +1860,7 @@ dependencies = [
  "hyper-util",
  "percent-encoding",
  "pin-project",
- "prost",
+ "prost 0.13.1",
  "socket2",
  "tokio",
  "tokio-stream",
@@ -1849,8 +1872,8 @@ dependencies = [
 
 [[package]]
 name = "tonic-build"
-version = "0.11.0"
-source = "git+https://github.com/hyperium/tonic.git#1c327a274c47d18b92a0af7b419fd128e1ff46d6"
+version = "0.12.0"
+source = "git+https://github.com/hyperium/tonic.git#4aad5afa216bdb39f518171888463667a4e4d1f4"
 dependencies = [
  "prettyplease",
  "proc-macro2",
