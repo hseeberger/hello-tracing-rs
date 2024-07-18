@@ -49,7 +49,7 @@ dependencies = [
 [[package]]
 name = "api-version"
 version = "0.1.0"
-source = "git+https://github.com/scndcloud/api-version#86b59923ed3cd54d338706b348d6d6b117fbcb79"
+source = "git+https://github.com/scndcloud/api-version#82ee85f12193b91f91620416d6b8e525ed407364"
 dependencies = [
  "array-macro",
  "axum 0.7.5",
