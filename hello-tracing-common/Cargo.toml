@@ -15,12 +15,14 @@ publish       = { workspace = true }
 anyhow                = { workspace = true }
 axum                  = { workspace = true }
 error-ext             = { workspace = true }
+figment               = { workspace = true, features = [ "env", "yaml" ] }
 opentelemetry         = { workspace = true }
 opentelemetry_sdk     = { workspace = true }
 opentelemetry-otlp    = { workspace = true }
 prost                 = { workspace = true }
 serde                 = { workspace = true }
 serde_json            = { workspace = true }
+thiserror             = { workspace = true }
 time                  = { workspace = true }
 tokio                 = { workspace = true }
 tonic                 = { workspace = true }
@@ -28,3 +30,6 @@ tower                 = { workspace = true }
 tracing               = { workspace = true }
 tracing-opentelemetry = { workspace = true }
 tracing-subscriber    = { workspace = true }
+
+[dev-dependencies]
+assert_matches = { workspace = true }

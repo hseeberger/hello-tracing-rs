@@ -6,8 +6,7 @@ use self::proto::{
     hello_server::{Hello, HelloServer},
     HelloRequest, HelloResponse,
 };
-use std::sync::Arc;
-use tokio::sync::RwLock;
+use std::sync::atomic::{AtomicBool, Ordering};
 use tonic::{Request, Response, Status};
 use tracing::{debug, instrument};
 
@@ -17,10 +16,10 @@ const MSGS: [&str; 2] = [
 ];
 
 pub fn hello() -> HelloServer<HelloService> {
-    HelloServer::new(HelloService(Arc::new(RwLock::new(0))))
+    HelloServer::new(HelloService(AtomicBool::default()))
 }
 
-pub struct HelloService(Arc<RwLock<usize>>);
+pub struct HelloService(AtomicBool);
 
 #[tonic::async_trait]
 impl Hello for HelloService {
@@ -29,12 +28,16 @@ impl Hello for HelloService {
         &self,
         _request: Request<HelloRequest>,
     ) -> Result<Response<HelloResponse>, Status> {
-        let mut n = self.0.write().await;
-        *n = (*n + 1) % MSGS.len();
+        // Toggle message index.
+        let previous = self.0.load(Ordering::Acquire);
+        let current = !previous;
+        self.0.store(current, Ordering::Release);
 
-        let msg = MSGS[*n];
+        // Get message for this response.
+        let msg = if current { MSGS[0] } else { MSGS[1] };
+        let msg = msg.to_string();
         debug!(msg, "answering with msg");
 
-        Ok(Response::new(HelloResponse { msg: msg.into() }))
+        Ok(Response::new(HelloResponse { msg }))
     }
 }

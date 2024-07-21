@@ -1,8 +1,7 @@
 mod api;
 
 use anyhow::{Context, Result};
-use configured::Configured;
-use hello_tracing_common::{log_error, tracing::init_tracing};
+use hello_tracing_common::{config::ConfigExt, log_error, tracing::init_tracing};
 use serde::Deserialize;
 use std::panic;
 use tracing::{error, info};
@@ -39,7 +38,6 @@ async fn main() {
 }
 
 #[derive(Debug, Deserialize)]
-#[serde(rename_all = "kebab-case")]
 struct Config {
     api: api::Config,
     tracing: hello_tracing_common::tracing::Config,

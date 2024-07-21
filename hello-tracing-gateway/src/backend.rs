@@ -48,7 +48,6 @@ impl Backend {
 }
 
 #[derive(Debug, Clone, Deserialize)]
-#[serde(rename_all = "kebab-case")]
 pub struct Config {
     endpoint: String,
 }

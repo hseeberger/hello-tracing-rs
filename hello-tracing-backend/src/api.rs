@@ -12,14 +12,13 @@ use tower_http::trace::TraceLayer;
 use tracing::{field, info_span, Span};
 
 #[derive(Debug, Clone, Deserialize)]
-#[serde(rename_all = "kebab-case")]
 pub struct Config {
-    addr: IpAddr,
+    address: IpAddr,
     port: u16,
 }
 
 pub async fn serve(config: Config) -> Result<()> {
-    let Config { addr, port } = config;
+    let Config { address, port } = config;
 
     let app = Server::builder()
         .layer(
@@ -30,7 +29,7 @@ pub async fn serve(config: Config) -> Result<()> {
         )
         .add_service(v0::hello());
 
-    app.serve_with_shutdown((addr, port).into(), shutdown_signal())
+    app.serve_with_shutdown((address, port).into(), shutdown_signal())
         .await
         .context("run server")
 }

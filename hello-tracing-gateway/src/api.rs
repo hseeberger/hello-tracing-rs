@@ -22,14 +22,13 @@ use tower_http::trace::TraceLayer;
 use tracing::{field, info_span, trace_span, Span};
 
 #[derive(Debug, Deserialize)]
-#[serde(rename_all = "kebab-case")]
 pub struct Config {
-    addr: IpAddr,
+    address: IpAddr,
     port: u16,
 }
 
 pub async fn serve(config: Config, backend: Backend) -> Result<()> {
-    let Config { addr, port } = config;
+    let Config { address, port } = config;
 
     let app = Router::new()
         .route("/", get(ready))
@@ -42,7 +41,7 @@ pub async fn serve(config: Config, backend: Backend) -> Result<()> {
         );
     let app = api_version!(0..=0, ApiVersionFilter).layer(app);
 
-    let listener = TcpListener::bind((addr, port))
+    let listener = TcpListener::bind((address, port))
         .await
         .context("bind TcpListener")?;
     axum::serve(listener, app.into_make_service())
@@ -58,9 +57,7 @@ impl api_version::ApiVersionFilter for ApiVersionFilter {
     type Error = Infallible;
 
     async fn filter(&self, uri: &Uri) -> Result<bool, Self::Error> {
-        let path = uri.path();
-        let no_rewrite = (path == "/") || path.starts_with("/api-doc") || path == "/openapi.json";
-        Ok(!no_rewrite)
+        Ok(uri.path() != "/")
     }
 }
 
