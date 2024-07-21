@@ -10,7 +10,6 @@ use tracing_subscriber::{
 };
 
 #[derive(Debug, Clone, Deserialize)]
-#[serde(rename_all = "kebab-case")]
 pub struct Config {
     service_name: String,
     otlp_exporter_endpoint: String,

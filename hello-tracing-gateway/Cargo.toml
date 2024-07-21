@@ -17,7 +17,6 @@ anyhow                = { workspace = true }
 api-version           = { workspace = true }
 async-trait           = { workspace = true }
 axum                  = { workspace = true }
-configured            = { workspace = true }
 opentelemetry         = { workspace = true }
 opentelemetry-otlp    = { workspace = true }
 prost                 = { workspace = true }
