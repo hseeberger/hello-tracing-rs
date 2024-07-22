@@ -25,6 +25,7 @@ pub fn record_trace_id<B>(request: Request<B>) -> Request<B> {
     request
 }
 
+// TODO Replace with struct from opentelemetry-http once all on HTTP 1.0!
 struct HeaderExtractor<'a>(&'a HeaderMap);
 
 impl<'a> Extractor for HeaderExtractor<'a> {

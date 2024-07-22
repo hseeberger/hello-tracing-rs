@@ -6,7 +6,7 @@ use hello_tracing_common::otel::http::{accept_trace, record_trace_id};
 use serde::Deserialize;
 use std::net::IpAddr;
 use tokio::signal::unix::{signal, SignalKind};
-use tonic::{body::BoxBody, transport::Server};
+use tonic::transport::Server;
 use tower::ServiceBuilder;
 use tower_http::trace::TraceLayer;
 use tracing::{field, info_span, Span};
@@ -24,7 +24,7 @@ pub async fn serve(config: Config) -> Result<()> {
         .layer(
             ServiceBuilder::new()
                 .layer(TraceLayer::new_for_grpc().make_span_with(make_span))
-                .map_request(accept_trace::<BoxBody>)
+                .map_request(accept_trace)
                 .map_request(record_trace_id),
         )
         .add_service(v0::hello());

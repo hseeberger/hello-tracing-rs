@@ -12,34 +12,35 @@ use tracing::{debug, instrument};
 
 #[derive(Debug, Clone)]
 pub struct Backend {
-    config: Config,
+    endpoint: String,
 }
 
 impl Backend {
     pub fn new(config: Config) -> Self {
-        Self { config }
+        let Config { endpoint } = config;
+        Self { endpoint }
     }
 
     #[instrument(name = "hello-backend-client", skip(self))]
     pub async fn hello(&self) -> Result<String> {
-        let endpoint = Endpoint::from_str(&self.config.endpoint)
-            .with_context(|| format!("create endpoint {}", self.config.endpoint))?;
+        let endpoint = Endpoint::from_str(&self.endpoint)
+            .with_context(|| format!("create endpoint {}", self.endpoint))?;
         let channel = endpoint
             .connect()
             .await
-            .with_context(|| format!("connect to endpoint {}", self.config.endpoint))?;
+            .with_context(|| format!("connect to endpoint {}", self.endpoint))?;
         let mut client = HelloClient::with_interceptor(channel, send_trace);
 
         let msg = client
             .hello(HelloRequest {})
             .await
-            .with_context(|| format!("call rpc Hello on endpoint {}", self.config.endpoint))?
+            .with_context(|| format!("call rpc Hello on endpoint {}", self.endpoint))?
             .into_inner()
             .msg;
 
         debug!(
             msg,
-            endpoint = self.config.endpoint,
+            endpoint = self.endpoint,
             "received response from rpc Hello"
         );
 
