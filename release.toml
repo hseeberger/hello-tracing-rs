@@ -1,3 +1,4 @@
 pre-release-commit-message = "chore({{crate_name}}): release version {{version}}"
 tag-message                = "release {{crate_name}} version {{version}}"
+tag-prefix                 = "{{crate_name}}/"
 consolidate-commits        = false
