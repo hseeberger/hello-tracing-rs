@@ -47,6 +47,8 @@ spec:
           #   grpc:
           #     port: 8080
           env:
+            - name: RUST_LOG
+              value: hello_tracing_backend=debug,hello_tracing_common=debug,info
             - name: HOST_IP
               valueFrom:
                 fieldRef:

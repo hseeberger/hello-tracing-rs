@@ -19,7 +19,7 @@ publish       = false
 [workspace.dependencies]
 anyhow                = { version = "1.0", features = [ "backtrace" ] }
 assert_matches        = { version = "1.5" }
-api-version           = { git = "https://github.com/scndcloud/api-version" }
+api-version           = { git = "https://github.com/hseeberger/api-version", ref = "82ee85f" }
 async-trait           = { version = "0.1" }
 axum                  = { version = "0.7", features = [ "http2", "json" ] }
 error-ext             = { version = "0.2" }

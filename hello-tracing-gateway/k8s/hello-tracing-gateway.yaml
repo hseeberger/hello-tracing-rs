@@ -48,6 +48,8 @@ spec:
               path: /
               port: http
           env:
+            - name: RUST_LOG
+              value: hello_tracing_gateway=debug,hello_tracing_common=debug,info
             - name: HOST_IP
               valueFrom:
                 fieldRef:

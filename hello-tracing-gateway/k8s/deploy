@@ -23,7 +23,7 @@ while getopts "v:c:h" opt; do
 done
 
 if [ -z "$VERSION" ]; then
-  VERSION=$(git tag | grep hello-tracing-gateway | tr -d 'hello-tracing-gateway-' | sort --version-sort -r | head -1 | cut -c 2-)
+  VERSION=$(git tag | grep hello-tracing-gateway/ | tr -d 'hello-tracing-gateway/' | sort --version-sort -r | head -1 | cut -c 2-)
   if [ -z "$VERSION" ]; then
     echo "ERROR: cannot determine version" >&2
     exit 1

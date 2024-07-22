@@ -1,32 +1,50 @@
-ARG RUST_VERSION=1.79.0
+# ---------- BUILD STAGE ---------- #
 
-FROM rust:${RUST_VERSION}-slim-bookworm AS builder
-WORKDIR /app
-COPY . .
-RUN \
-  apt-get update && \
-  apt-get install -y jq protobuf-compiler
-RUN \
-  --mount=type=cache,target=/app/target/ \
-  --mount=type=cache,target=/usr/local/cargo/registry/ \
-  cargo build --package hello-tracing-gateway --release && \
-  cp ./target/release/hello-tracing-gateway /
+# Keep in sync with rust-toolchain.toml to omit downloading/installing!
+FROM rust:1.79.0-bookworm AS build_stage
 
-FROM debian:bookworm-slim AS final
-RUN adduser \
-  --disabled-password \
-  --gecos "" \
-  --home "/nonexistent" \
-  --shell "/sbin/nologin" \
-  --no-create-home \
-  --uid "10001" \
-  appuser
-COPY --from=builder /hello-tracing-gateway /usr/local/bin
-RUN chown appuser /usr/local/bin/hello-tracing-gateway
-COPY --from=builder /app/hello-tracing-gateway/config /opt/hello-tracing-gateway/config
-RUN chown -R appuser /opt/hello-tracing-gateway
+ARG PROFILE=release
+
+WORKDIR /build
+
+# Install protobuf-compiler.
+RUN apt-get update && apt-get install -y protobuf-compiler
+
+COPY ./Cargo.toml ./Cargo.lock ./
+COPY ./rust-toolchain.toml ./
+COPY ./hello-tracing-backend/Cargo.toml ./hello-tracing-backend/
+COPY ./hello-tracing-common/Cargo.toml ./hello-tracing-common/
+COPY ./hello-tracing-gateway/Cargo.toml ./hello-tracing-gateway/
+
+RUN mkdir ./hello-tracing-backend/src && \
+    echo "fn main() {}" > ./hello-tracing-backend/src/main.rs && \
+    mkdir ./hello-tracing-common/src && \
+    echo "fn main() {}" > ./hello-tracing-common/src/main.rs && \
+    mkdir ./hello-tracing-gateway/src && \
+    echo "fn main() {}" > ./hello-tracing-gateway/src/main.rs && \
+    find . -path '*/src/*' | xargs touch -t 197001010001 -m
+
+RUN cargo build -p hello-tracing-gateway --locked --profile $PROFILE && \
+    find ./target | xargs touch -t 197001010002 -m
+
+COPY ./ ./
+
+RUN cargo build -p hello-tracing-gateway --locked --profile $PROFILE && \
+    mv ./target/$([ "$PROFILE" = "release" ] && echo "release" || echo "debug")/hello-tracing-gateway /
+
+# ---------- RUNTIME STAGE ---------- #
+
+FROM debian:bookworm-slim
+
+RUN adduser --disabled-password --gecos "" --home "/nonexistent" --shell "/sbin/nologin" --no-create-home --uid "10001" appuser
+RUN mkdir /var/run/hello-tracing-gateway && chown appuser:appuser /var/run/hello-tracing-gateway
+
+COPY --from=build_stage --chown=appuser:appuser /build/hello-tracing-gateway/bin/entrypoint.sh /usr/local/bin/
+COPY --from=build_stage --chown=appuser:appuser /hello-tracing-gateway /usr/local/bin/
+COPY --from=build_stage --chown=appuser:appuser /build/hello-tracing-gateway/config.yaml /opt/hello-tracing-gateway/
+
 USER appuser
-ENV RUST_LOG="hello_tracing_gateway=debug,info"
+
 WORKDIR /opt/hello-tracing-gateway
-ENTRYPOINT ["hello-tracing-gateway"]
-EXPOSE 8080/tcp
+
+ENTRYPOINT ["entrypoint.sh"]
