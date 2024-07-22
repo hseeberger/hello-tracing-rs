@@ -130,6 +130,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           file: hello-tracing-gateway/Dockerfile
+          platforms: linux/amd64,linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           push: true
