@@ -48,3 +48,11 @@ docker tag="latest":
 		-t hseeberger/hello-tracing-gateway:{{tag}} \
 		-f hello-tracing-gateway/Dockerfile \
 		.
+
+release level execute="":
+	cargo release \
+		--exclude hello-tracing-common \
+		--sign-commit \
+		--sign-tag \
+		--no-verify \
+		{{level}} {{execute}}
