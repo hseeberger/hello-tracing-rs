@@ -31,20 +31,20 @@ impl Backend {
             .with_context(|| format!("connect to endpoint {}", self.endpoint))?;
         let mut client = HelloClient::with_interceptor(channel, send_trace);
 
-        let message = client
+        let text = client
             .hello(HelloRequest {})
             .await
             .with_context(|| format!("call Hello on endpoint {}", self.endpoint))?
             .into_inner()
-            .message;
+            .text;
 
         debug!(
-            message,
+            text,
             endpoint = self.endpoint,
             "received response from Hello"
         );
 
-        Ok(message)
+        Ok(text)
     }
 }
 

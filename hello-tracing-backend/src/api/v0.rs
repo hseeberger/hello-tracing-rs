@@ -10,7 +10,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use tonic::{Request, Response, Status};
 use tracing::{debug, instrument};
 
-const MESSAGES: [&str; 2] = [
+const TEXTS: [&str; 2] = [
     "Hello, I'm a tracing demo!",
     "Hello, I'm built with Rust, Axum and tonic!",
 ];
@@ -28,16 +28,16 @@ impl Hello for HelloService {
         &self,
         _request: Request<HelloRequest>,
     ) -> Result<Response<HelloResponse>, Status> {
-        // Toggle message index.
+        // Toggle text index.
         let previous = self.0.load(Ordering::Acquire);
         let current = !previous;
         self.0.store(current, Ordering::Release);
 
-        // Get message for this response.
-        let message = if current { MESSAGES[0] } else { MESSAGES[1] };
-        let message = message.to_string();
-        debug!(message, "answering");
+        // Get text for this response.
+        let text = if current { TEXTS[0] } else { TEXTS[1] };
+        let text = text.to_string();
+        debug!(text, "answering");
 
-        Ok(Response::new(HelloResponse { message }))
+        Ok(Response::new(HelloResponse { text }))
     }
 }

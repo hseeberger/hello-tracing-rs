@@ -5,4 +5,7 @@ service Hello { rpc Hello(HelloRequest) returns (HelloResponse); }
 
 message HelloRequest {}
 
-message HelloResponse { string message = 1; }
+message HelloResponse {
+    // Not calling it `message`, because it will interfere tracing `message`s.
+    string text = 1;
+}
