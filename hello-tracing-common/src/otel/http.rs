@@ -1,4 +1,4 @@
-use axum::http::{HeaderMap, Request};
+use http::{HeaderMap, Request};
 use opentelemetry::{global, propagation::Extractor, trace::TraceContextExt};
 use tracing::{warn, Span};
 use tracing_opentelemetry::OpenTelemetrySpanExt;
