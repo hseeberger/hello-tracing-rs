@@ -31,20 +31,20 @@ impl Backend {
             .with_context(|| format!("connect to endpoint {}", self.endpoint))?;
         let mut client = HelloClient::with_interceptor(channel, send_trace);
 
-        let msg = client
+        let message = client
             .hello(HelloRequest {})
             .await
-            .with_context(|| format!("call rpc Hello on endpoint {}", self.endpoint))?
+            .with_context(|| format!("call Hello on endpoint {}", self.endpoint))?
             .into_inner()
-            .msg;
+            .message;
 
         debug!(
-            msg,
+            message,
             endpoint = self.endpoint,
-            "received response from rpc Hello"
+            "received response from Hello"
         );
 
-        Ok(msg)
+        Ok(message)
     }
 }
 
