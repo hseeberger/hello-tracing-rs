@@ -17,28 +17,29 @@ documentation = "https://github.com/hseeberger/hello-tracing-rs"
 publish       = false
 
 [workspace.dependencies]
-anyhow                = { version = "1.0", features = [ "backtrace" ] }
+anyhow                = { version = "1.0" }
 assert_matches        = { version = "1.5" }
-api-version           = { git = "https://github.com/hseeberger/api-version", ref = "82ee85f" }
+api-version           = { git = "https://github.com/hseeberger/api-version", rev = "82ee85f" }
 async-trait           = { version = "0.1" }
-axum                  = { version = "0.7", features = [ "http2", "json" ] }
+axum                  = { version = "0.7" }
 error-ext             = { version = "0.2" }
 figment               = { version = "0.10" }
-opentelemetry         = { version = "0.22" }
-opentelemetry_sdk     = { version = "0.22", features = [ "rt-tokio" ] }
-opentelemetry-otlp    = { version = "0.15", default-features = false, features = [ "trace", "grpc-tonic" ] }
+http                  = { version = "1.0" }
+opentelemetry         = { version = "0.24" }
+opentelemetry-http    = { version = "0.13" }
+opentelemetry_sdk     = { version = "0.24" }
+opentelemetry-otlp    = { version = "0.17", default-features = false }
 prost                 = { version = "0.13" }
-serde                 = { version = "1.0", features = [ "derive" ] }
+serde                 = { version = "1.0" }
 serde_json            = { version = "1.0" }
-time                  = { version = "0.3", features = [ "formatting" ] }
+time                  = { version = "0.3" }
 thiserror             = { version = "1.0" }
-tokio                 = { version = "1", features = [ "macros", "rt-multi-thread", "signal" ] }
-tokio-stream          = { version = "0.1", features = [ "fs" ] }
+tokio                 = { version = "1" }
 tonic                 = { version = "0.12" }
 tonic-build           = { version = "0.12" }
 tower                 = { version = "0.4" }
-tower-http            = { version = "0.5", features = [ "trace" ] }
+tower-http            = { version = "0.5" }
 tracing               = { version = "0.1", default-features = false }
-tracing-opentelemetry = { version = "0.23", default-features = false }
-tracing-subscriber    = { version = "0.3", default-features = false, features = [ "env-filter", "fmt", "json" ] }
+tracing-opentelemetry = { version = "0.25", default-features = false }
+tracing-subscriber    = { version = "0.3", default-features = false }
 walkdir               = { version = "2.5" }

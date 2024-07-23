@@ -1,6 +1,6 @@
 use anyhow::{Context, Result};
 use error_ext::StdErrorExt;
-use opentelemetry::{global, KeyValue};
+use opentelemetry::{global, trace::TracerProvider, KeyValue};
 use opentelemetry_otlp::WithExportConfig;
 use opentelemetry_sdk::{propagation::TraceContextPropagator, runtime, trace, Resource};
 use serde::Deserialize;
@@ -43,17 +43,19 @@ where
         .tonic()
         .with_endpoint(config.otlp_exporter_endpoint);
 
-    let trace_config = trace::config().with_resource(Resource::new(vec![KeyValue::new(
+    let service_name = Resource::new(vec![KeyValue::new(
         "service.name",
-        config.service_name,
-    )]));
+        config.service_name.clone(),
+    )]);
+    let trace_config = trace::Config::default().with_resource(service_name);
 
     let tracer = opentelemetry_otlp::new_pipeline()
         .tracing()
         .with_exporter(exporter)
         .with_trace_config(trace_config)
         .install_batch(runtime::Tokio)
-        .context("install tracer")?;
+        .context("install tracer")?
+        .tracer(config.service_name);
 
     Ok(tracing_opentelemetry::layer().with_tracer(tracer))
 }
