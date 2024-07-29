@@ -1,7 +1,7 @@
 # ---------- BUILD STAGE ---------- #
 
 # Keep in sync with rust-toolchain.toml to omit downloading/installing!
-FROM rust:1.79.0-bookworm AS build_stage
+FROM rust:1.80.0-bookworm AS build_stage
 
 ARG PROFILE=release
 
