@@ -1,4 +1,5 @@
 set shell := ["bash", "-uc"]
+rust_version := `grep channel rust-toolchain.toml | sed -r 's/channel = "(.*)"/\1/'`
 
 check:
 	cargo check -p hello-tracing-common
@@ -41,10 +42,12 @@ run-backend port="8081":
 
 docker tag="latest":
 	docker build \
+		--build-arg "RUST_VERSION={{rust_version}}" \
 		-t hseeberger/hello-tracing-backend:{{tag}} \
 		-f hello-tracing-backend/Dockerfile \
 		.
 	docker build \
+		--build-arg "RUST_VERSION={{rust_version}}" \
 		-t hseeberger/hello-tracing-gateway:{{tag}} \
 		-f hello-tracing-gateway/Dockerfile \
 		.
