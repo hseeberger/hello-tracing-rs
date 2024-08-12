@@ -1,4 +1,4 @@
-name: ci
+name: CI
 
 on:
   push:
@@ -36,24 +36,13 @@ jobs:
       - uses: actions/checkout@v4
       - name: Set toolchain
         id: set_toolchain
-        env:
-          toolchain_toml: "rust-toolchain.toml"
         run: |
-          if [[ -z $nightly ]] && [[ -f $toolchain_toml ]]; then
-            toolchain=$(grep channel $toolchain_toml | sed -r 's/channel = "(.*)"/\1/')
-            echo "using toolchain $toolchain from rust-toolchain.toml"
-            echo "toolchain=$toolchain" >> "$GITHUB_OUTPUT"
-            if [[ $toolchain =~ ^nightly.* ]]; then
-              echo "using nightly_toolchain $toolchain"
-              echo "nightly_toolchain=$toolchain" >> "$GITHUB_OUTPUT"
-            else
-              echo "using nightly_toolchain nightly"
-              echo "nightly_toolchain=nightly" >> "$GITHUB_OUTPUT"
-            fi
+          toolchain=$(grep channel rust-toolchain.toml | sed -r 's/channel = "(.*)"/\1/')
+          echo "toolchain=$toolchain" >> "$GITHUB_OUTPUT"
+          if [[ $toolchain =~ ^nightly.* ]]; then
+            echo "using nightly_toolchain $toolchain"
+            echo "nightly_toolchain=$toolchain" >> "$GITHUB_OUTPUT"
           else
-            toolchain='nightly'
-            echo "using toolchain nightly"
-            echo "toolchain=nightly" >> "$GITHUB_OUTPUT"
             echo "using nightly_toolchain nightly"
             echo "nightly_toolchain=nightly" >> "$GITHUB_OUTPUT"
           fi
