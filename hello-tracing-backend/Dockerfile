@@ -1,6 +1,5 @@
 # ---------- BUILD STAGE ---------- #
 
-# Keep in sync with rust-toolchain.toml to omit downloading/installing!
 ARG RUST_VERSION
 FROM rust:$RUST_VERSION-bookworm AS build_stage
 
