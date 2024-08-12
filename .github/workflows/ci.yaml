@@ -38,6 +38,7 @@ jobs:
         id: set_toolchain
         run: |
           toolchain=$(grep channel rust-toolchain.toml | sed -r 's/channel = "(.*)"/\1/')
+          echo "using toolchain $toolchain"
           echo "toolchain=$toolchain" >> "$GITHUB_OUTPUT"
           if [[ $toolchain =~ ^nightly.* ]]; then
             echo "using nightly_toolchain $toolchain"
