@@ -4,5 +4,6 @@ api:
 
 telemetry:
   tracing:
+    enabled: true
     service_name: "hello-tracing-backend"
     otlp_exporter_endpoint: "http://localhost:4317"
