@@ -21,10 +21,10 @@ use tower::{Layer, ServiceBuilder};
 use tower_http::trace::TraceLayer;
 use tracing::{field, info_span, trace_span, Span};
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Clone, Deserialize)]
 pub struct Config {
-    address: IpAddr,
-    port: u16,
+    pub address: IpAddr,
+    pub port: u16,
 }
 
 pub async fn serve(config: Config, backend: Backend) -> Result<()> {

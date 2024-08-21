@@ -5,6 +5,7 @@ api:
 # backend:
 #   endpoint: ...
 
-tracing:
-  service_name: "hello-tracing-gateway"
-  otlp_exporter_endpoint: "http://localhost:4317"
+telemetry:
+  tracing:
+    service_name: "hello-tracing-gateway"
+    otlp_exporter_endpoint: "http://localhost:4317"

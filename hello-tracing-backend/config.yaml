@@ -2,6 +2,7 @@ api:
   address: "0.0.0.0"
   port: 8080
 
-tracing:
-  service_name: "hello-tracing-backend"
-  otlp_exporter_endpoint: "http://localhost:4317"
+telemetry:
+  tracing:
+    service_name: "hello-tracing-backend"
+    otlp_exporter_endpoint: "http://localhost:4317"
