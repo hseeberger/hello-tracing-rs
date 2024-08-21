@@ -4,10 +4,10 @@ use figment::{
 };
 use serde::Deserialize;
 use std::env;
-use thiserror::Error;
 
 const CONFIG_FILE: &str = "CONFIG_FILE";
 
+/// Extension methods for "configuration structs" which can be deserialized.
 pub trait ConfigExt
 where
     Self: for<'de> Deserialize<'de>,
@@ -15,7 +15,7 @@ where
     /// Load the configuration from the file at the value of the `CONFIG_FILE` environment variable
     /// or `config.yaml` by default, with an overlay provided by environment variables prefixed with
     /// `"APP__"` and split/nested via `"__"`.
-    fn load() -> Result<Self, Error> {
+    fn load() -> Result<Self, figment::Error> {
         let config_file = env::var(CONFIG_FILE)
             .map(Yaml::file_exact)
             .unwrap_or(Yaml::file_exact("config.yaml"));
@@ -31,39 +31,44 @@ where
 
 impl<T> ConfigExt for T where T: for<'de> Deserialize<'de> {}
 
-/// Possible errors when loading the configuration.
-#[derive(Debug, Error)]
-#[error("cannot load configuration")]
-pub struct Error(#[from] figment::Error);
-
 #[cfg(test)]
 mod tests {
-    use crate::config::ConfigExt;
+    use crate::{
+        config::{ConfigExt, CONFIG_FILE},
+        telemetry,
+    };
     use assert_matches::assert_matches;
     use serde::Deserialize;
     use std::env;
 
     #[test]
     fn test_load() {
-        env::set_var("APP__FOO__BAZ", 666.to_string());
+        env::set_var("APP__FOO", "foo");
 
         let config = Config::load();
         assert_matches!(
             config,
             Ok(Config {
-                foo: Foo { bar, baz }
-            }) if bar == "bar" && baz == 666
+                foo,
+                telemetry_config: telemetry::Config {
+                    tracing_config: telemetry::TracingConfig {
+                        enabled,
+                        ..
+                    }
+                },
+            }) if foo == "foo" && !enabled
         );
+
+        env::set_var(CONFIG_FILE, "nonexistent.yaml");
+        let config = Config::load();
+        assert!(config.is_err());
     }
 
     #[derive(Debug, Deserialize)]
     struct Config {
-        foo: Foo,
-    }
+        foo: String,
 
-    #[derive(Debug, Deserialize)]
-    struct Foo {
-        bar: String,
-        baz: u64,
+        #[serde(rename = "telemetry")]
+        telemetry_config: telemetry::Config,
     }
 }

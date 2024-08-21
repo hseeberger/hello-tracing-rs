@@ -50,5 +50,5 @@ impl Backend {
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct Config {
-    endpoint: String,
+    pub endpoint: String,
 }

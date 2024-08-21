@@ -1,5 +1,7 @@
 # Just for testing purposes!
 
-foo:
-  bar: "bar"
-  baz: 42
+telemetry:
+  tracing:
+    enabled: false
+    service_name: "test2"
+    otlp_exporter_endpoint: "http://localhost:4317"
