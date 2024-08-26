@@ -331,9 +331,9 @@ dependencies = [
 
 [[package]]
 name = "error-ext"
-version = "0.2.1"
+version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "37851f6c81ce82bb26372993f4a5835a5a3bf0f06285afbb95a710e3dd0c323f"
+checksum = "b52d73f6e21c96758192cf6d14d0a1c36e9b00eeeb22c3974fcc83b36ab3a37f"
 
 [[package]]
 name = "fastrand"
