@@ -1,8 +1,8 @@
 [workspace]
 members = [
-  "hello-tracing-backend",
-  "hello-tracing-common",
-  "hello-tracing-gateway",
+    "hello-tracing-backend",
+    "hello-tracing-common",
+    "hello-tracing-gateway",
 ]
 resolver = "2"
 
