@@ -29,7 +29,7 @@ all: check fmt lint test
 
 run-gateway port="8080" backend_port="8081":
 	RUST_LOG=hello_tracing_gateway=debug,info \
-		CONFIG_FILE=hello-tracing-backend/config.yaml \
+		CONFIG_FILE=hello-tracing-gateway/config.yaml \
 		APP__API__PORT={{port}} \
 		APP__BACKEND__ENDPOINT=http://localhost:{{backend_port}} \
 		cargo run -p hello-tracing-gateway
