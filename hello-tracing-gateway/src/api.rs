@@ -19,7 +19,7 @@ use tokio::{
 };
 use tower::{Layer, ServiceBuilder};
 use tower_http::trace::TraceLayer;
-use tracing::{field, info_span, trace_span, Span};
+use tracing::{field, info, info_span, trace_span, Span};
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct Config {
@@ -44,6 +44,8 @@ pub async fn serve(config: Config, backend: Backend) -> Result<()> {
     let listener = TcpListener::bind((address, port))
         .await
         .context("bind TcpListener")?;
+    info!(?address, port, "listening to TCP connections");
+
     axum::serve(listener, app.into_make_service())
         .with_graceful_shutdown(shutdown_signal())
         .await
