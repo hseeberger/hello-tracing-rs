@@ -24,7 +24,7 @@ async-trait           = { version = "0.1" }
 axum                  = { version = "0.7" }
 error-ext             = { version = "0.2" }
 figment               = { version = "0.10" }
-http                  = { version = "1.0" }
+http                  = { version = "1.2" }
 opentelemetry         = { version = "0.24" }
 opentelemetry-http    = { version = "0.13" }
 opentelemetry_sdk     = { version = "0.24" }
