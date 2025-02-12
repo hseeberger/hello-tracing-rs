@@ -25,10 +25,10 @@ axum                  = { version = "0.7" }
 error-ext             = { version = "0.2" }
 figment               = { version = "0.10" }
 http                  = { version = "1.2" }
-opentelemetry         = { version = "0.24" }
-opentelemetry-http    = { version = "0.13" }
-opentelemetry_sdk     = { version = "0.24" }
-opentelemetry-otlp    = { version = "0.17", default-features = false }
+opentelemetry         = { version = "0.27" }
+opentelemetry_sdk     = { version = "0.27" }
+opentelemetry-http    = { version = "0.27" }
+opentelemetry-otlp    = { version = "0.27", default-features = false }
 prost                 = { version = "0.13" }
 serde                 = { version = "1.0" }
 serde_json            = { version = "1.0" }
@@ -40,6 +40,6 @@ tonic-build           = { version = "0.12" }
 tower                 = { version = "0.4" }
 tower-http            = { version = "0.5" }
 tracing               = { version = "0.1", default-features = false }
-tracing-opentelemetry = { version = "0.25", default-features = false }
+tracing-opentelemetry = { version = "0.28", default-features = false }
 tracing-subscriber    = { version = "0.3", default-features = false }
 walkdir               = { version = "2.5" }

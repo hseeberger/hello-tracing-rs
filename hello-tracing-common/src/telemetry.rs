@@ -1,7 +1,8 @@
-use crate::error::StdErrorExt;
-use opentelemetry::{trace::TracerProvider, KeyValue};
-use opentelemetry_otlp::WithExportConfig;
-use opentelemetry_sdk::{propagation::TraceContextPropagator, runtime, trace, Resource};
+use opentelemetry::{trace::TracerProvider as _, KeyValue};
+use opentelemetry_otlp::{SpanExporter, WithExportConfig};
+use opentelemetry_sdk::{
+    propagation::TraceContextPropagator, runtime, trace::TracerProvider, Resource,
+};
 use serde::Deserialize;
 use thiserror::Error;
 use tracing::error;
@@ -25,11 +26,8 @@ pub struct TracingConfig {
 /// Error possibly returned by [init].
 #[derive(Debug, Error)]
 pub enum Error {
-    #[error("cannot set error handler")]
-    SetErrorHandler(#[from] opentelemetry::global::Error),
-
     #[error("cannot initialize tracing subscriber")]
-    TryInit(#[from] tracing_subscriber::util::TryInitError),
+    TryInitTracing(#[from] tracing_subscriber::util::TryInitError),
 
     #[error("cannot install OTLP tracer")]
     InstallOtlpTracer(#[from] opentelemetry::trace::TraceError),
@@ -49,11 +47,6 @@ pub fn init(config: Config) -> Result<(), Error> {
     // `tracing.with(otlp_layer(config)?)` have different types.
     if tracing_config.enabled {
         opentelemetry::global::set_text_map_propagator(TraceContextPropagator::new());
-
-        opentelemetry::global::set_error_handler(|error| {
-            error!(error = error.as_chain(), target = "otel", "otel error")
-        })?;
-
         tracing.with(otlp_layer(tracing_config)?).try_init()?
     } else {
         tracing.try_init()?
@@ -67,22 +60,22 @@ fn otlp_layer<S>(config: TracingConfig) -> Result<impl tracing_subscriber::Layer
 where
     S: tracing::Subscriber + for<'span> tracing_subscriber::registry::LookupSpan<'span>,
 {
-    let exporter = opentelemetry_otlp::new_exporter()
-        .tonic()
-        .with_endpoint(config.otlp_exporter_endpoint);
+    let exporter = SpanExporter::builder()
+        .with_tonic()
+        .with_endpoint(config.otlp_exporter_endpoint)
+        .build()?;
 
     let service_name = Resource::new(vec![KeyValue::new(
         "service.name",
         config.service_name.clone(),
     )]);
-    let trace_config = trace::Config::default().with_resource(service_name);
 
-    let tracer = opentelemetry_otlp::new_pipeline()
-        .tracing()
-        .with_exporter(exporter)
-        .with_trace_config(trace_config)
-        .install_batch(runtime::Tokio)?
-        .tracer(config.service_name);
+    let provider = TracerProvider::builder()
+        .with_resource(service_name)
+        .with_batch_exporter(exporter, runtime::Tokio)
+        .build();
+
+    let tracer = provider.tracer("config.service_name");
 
     Ok(tracing_opentelemetry::layer().with_tracer(tracer))
 }

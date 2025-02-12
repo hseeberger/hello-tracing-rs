@@ -20,7 +20,6 @@ just run-backend
 
 ## Configure Grafana Agent
 
-
 ```
 server:
   log_level: warn

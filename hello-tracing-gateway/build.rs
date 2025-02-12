@@ -12,7 +12,7 @@ fn main() -> Result<()> {
     let protos = list_protos(Path::new(PROTOS))?;
     tonic_build::configure()
         .build_server(false)
-        .compile(&protos, &[PROTOS])
+        .compile_protos(&protos, &[PROTOS])
         .context("compile protos")
 }
 

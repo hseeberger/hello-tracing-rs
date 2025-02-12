@@ -10,7 +10,7 @@ use axum::{
     routing::get,
     Router, ServiceExt,
 };
-use hello_tracing_common::otel::http::{accept_trace, record_trace_id};
+use hello_tracing_common::otel::{accept_trace, record_trace_id};
 use serde::Deserialize;
 use std::{convert::Infallible, net::IpAddr};
 use tokio::{

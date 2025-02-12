@@ -2,7 +2,7 @@ mod v0;
 
 use anyhow::{Context, Result};
 use axum::http::Request;
-use hello_tracing_common::otel::http::{accept_trace, record_trace_id};
+use hello_tracing_common::otel::{accept_trace, record_trace_id};
 use serde::Deserialize;
 use std::net::IpAddr;
 use tokio::signal::unix::{signal, SignalKind};

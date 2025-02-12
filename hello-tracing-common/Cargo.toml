@@ -17,6 +17,7 @@ error-ext             = { workspace = true }
 figment               = { workspace = true, features = [ "env", "yaml" ] }
 http                  = { workspace = true }
 opentelemetry         = { workspace = true }
+opentelemetry-http    = { workspace = true }
 opentelemetry_sdk     = { workspace = true, features = [ "rt-tokio" ] }
 opentelemetry-otlp    = { workspace = true, default-features = false, features = [ "trace", "grpc-tonic" ] }
 prost                 = { workspace = true }
