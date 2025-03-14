@@ -1,4 +1,4 @@
-use error_ext::StdErrorExt;
+use crate::error::StdErrorExt;
 use opentelemetry::{global, propagation::Injector};
 use tonic::{
     metadata::{MetadataKey, MetadataMap, MetadataValue},

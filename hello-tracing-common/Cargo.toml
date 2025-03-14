@@ -13,9 +13,8 @@ publish       = { workspace = true }
 
 [dependencies]
 anyhow                = { workspace = true }
-error-ext             = { workspace = true }
+axum                  = { workspace = true }
 figment               = { workspace = true, features = [ "env", "yaml" ] }
-http                  = { workspace = true }
 opentelemetry         = { workspace = true }
 opentelemetry-http    = { workspace = true }
 opentelemetry_sdk     = { workspace = true, features = [ "rt-tokio" ] }

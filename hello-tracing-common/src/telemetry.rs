@@ -1,8 +1,6 @@
-use opentelemetry::{trace::TracerProvider as _, KeyValue};
+use opentelemetry::trace::TracerProvider as _;
 use opentelemetry_otlp::{SpanExporter, WithExportConfig};
-use opentelemetry_sdk::{
-    propagation::TraceContextPropagator, runtime, trace::TracerProvider, Resource,
-};
+use opentelemetry_sdk::{propagation::TraceContextPropagator, trace::SdkTracerProvider, Resource};
 use serde::Deserialize;
 use thiserror::Error;
 use tracing::error;
@@ -65,14 +63,13 @@ where
         .with_endpoint(config.otlp_exporter_endpoint)
         .build()?;
 
-    let service_name = Resource::new(vec![KeyValue::new(
-        "service.name",
-        config.service_name.clone(),
-    )]);
+    let resource = Resource::builder()
+        .with_service_name(config.service_name)
+        .build();
 
-    let provider = TracerProvider::builder()
-        .with_resource(service_name)
-        .with_batch_exporter(exporter, runtime::Tokio)
+    let provider = SdkTracerProvider::builder()
+        .with_resource(resource)
+        .with_batch_exporter(exporter)
         .build();
 
     let tracer = provider.tracer("config.service_name");

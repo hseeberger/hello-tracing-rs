@@ -1,6 +1,6 @@
 pub mod grpc;
 
-use http::Request;
+use axum::http::Request;
 use opentelemetry::{global, trace::TraceContextExt};
 use opentelemetry_http::HeaderExtractor;
 use tracing::Span;
