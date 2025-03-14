@@ -12,7 +12,6 @@ documentation = { workspace = true }
 publish       = { workspace = true }
 
 [dependencies]
-anyhow                = { workspace = true }
 axum                  = { workspace = true }
 figment               = { workspace = true, features = [ "env", "yaml" ] }
 opentelemetry         = { workspace = true }
