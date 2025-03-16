@@ -2,7 +2,7 @@ mod v0;
 
 use crate::backend::Backend;
 use anyhow::{Context, Result};
-use api_version::api_version;
+use api_version::{ApiVersionLayer, ApiVersions};
 use axum::{
     body::Body,
     http::{Request, StatusCode, Uri},
@@ -20,6 +20,8 @@ use tokio::{
 use tower::{Layer, ServiceBuilder};
 use tower_http::trace::TraceLayer;
 use tracing::{field, info_span, trace_span, Span};
+
+const API_VERSIONS: ApiVersions<1> = ApiVersions::new([0]);
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct Config {
@@ -39,7 +41,7 @@ pub async fn serve(config: Config, backend: Backend) -> Result<()> {
                 .map_request(accept_trace)
                 .map_request(record_trace_id),
         );
-    let app = api_version!(0..=0, ApiVersionFilter).layer(app);
+    let app = ApiVersionLayer::new(API_VERSIONS, ApiVersionFilter).layer(app);
 
     let listener = TcpListener::bind((address, port))
         .await

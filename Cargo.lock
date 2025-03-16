@@ -34,25 +34,18 @@ checksum = "dcfed56ad506cb2c684a14971b8861fdc3baaaae314b9e5f9bb532cbe3ba7a4f"
 
 [[package]]
 name = "api-version"
-version = "0.1.0"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "50bb9b7e65e36cbf2166d076b48c0bf318a9fb9cf78d11c080085491c94e53d2"
+checksum = "d767f93c41abd261cde3cb318463c1cd118943a0f5a7e3b15af8d35dc1d14e4c"
 dependencies = [
- "array-macro",
  "axum 0.8.1",
  "axum-extra",
  "futures",
  "regex",
- "thiserror",
  "tower 0.5.2",
  "tracing",
+ "trait-variant",
 ]
-
-[[package]]
-name = "array-macro"
-version = "2.1.8"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "220a2c618ab466efe41d0eace94dfeff1c35e3aa47891bdb95e1c0fefffd3c99"
 
 [[package]]
 name = "assert_matches"
@@ -1750,6 +1743,17 @@ dependencies = [
  "tracing",
  "tracing-core",
  "tracing-serde",
+]
+
+[[package]]
+name = "trait-variant"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "70977707304198400eb4835a78f6a9f928bf41bba420deb8fdb175cd965d77a7"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]
