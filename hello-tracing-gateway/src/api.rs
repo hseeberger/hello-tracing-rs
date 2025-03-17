@@ -58,7 +58,7 @@ struct ApiVersionFilter;
 impl api_version::ApiVersionFilter for ApiVersionFilter {
     type Error = Infallible;
 
-    async fn filter(&self, uri: &Uri) -> Result<bool, Self::Error> {
+    async fn should_rewrite(&self, uri: &Uri) -> Result<bool, Self::Error> {
         Ok(uri.path() != "/")
     }
 }

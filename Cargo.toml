@@ -19,7 +19,7 @@ publish       = false
 [workspace.dependencies]
 anyhow                = { version = "1.0" }
 assert_matches        = { version = "1.5" }
-api-version           = { version = "0.2" }
+api-version           = { version = "0.3" }
 async-trait           = { version = "0.1" }
 axum                  = { version = "0.8" }
 figment               = { version = "0.10" }
