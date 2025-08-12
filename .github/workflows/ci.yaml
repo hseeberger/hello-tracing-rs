@@ -33,7 +33,7 @@ jobs:
       toolchain: ${{steps.set_toolchain.outputs.toolchain}}
       nightly_toolchain: ${{steps.set_toolchain.outputs.nightly_toolchain}}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set toolchain
         id: set_toolchain
         run: |
@@ -52,7 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: toolchain
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@master
@@ -80,7 +80,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: toolchain
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@master
@@ -104,7 +104,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [toolchain, check, fmt-check]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@master
@@ -133,7 +133,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [toolchain, check, fmt-check]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@master
