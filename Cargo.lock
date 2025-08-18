@@ -34,9 +34,9 @@ checksum = "b0674a1ddeecb70197781e945de4b3b8ffb61fa939a5597bcf48503737663100"
 
 [[package]]
 name = "api-version"
-version = "0.3.1"
+version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "85130396635869cfddf090ffba4567864f2ae1b087bfddf3bb92909222fdf81e"
+checksum = "9db875927593a91ea31851c395615cc787adee42fa23e003d93760fe4decf0a2"
 dependencies = [
  "axum 0.8.1",
  "axum-extra",
