@@ -18,7 +18,7 @@ jobs:
       toolchain: ${{steps.set_toolchain.outputs.toolchain}}
       nightly_toolchain: ${{steps.set_toolchain.outputs.nightly_toolchain}}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Set toolchain
         id: set_toolchain
         run: |
